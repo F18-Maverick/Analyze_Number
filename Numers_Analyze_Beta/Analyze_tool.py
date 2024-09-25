@@ -4,7 +4,6 @@ import threading
 import webbrowser
 import urllib.request
 from tkinter import ttk
-from Function_12306 import Run_Function_12306_All
 import tkinter.messagebox
 from concurrent.futures import ThreadPoolExecutor
 class Analyze_All_Function():
@@ -22,6 +21,9 @@ class Analyze_All_Function():
         self.size_position_str="{}x{}+{}+{}".format(self.Windows_width, self.Windows_height, self.screen_x, self.screen_y)
         self.New_Windows=self.Windows.geometry(self.size_position_str)
         self.windows_icon=self.Windows.iconbitmap(r"download_photo.ico")
+        self.Entry_Function = self.Entry_Function()
+        self.button_windows = self.Windows_Button()
+        self.thread_pool_run = self.thread_pool_concurrent()
     # 窗口GUI中的URL输入框
     def Entry_Function(self):
         self.entery=tkinter.Entry(
@@ -60,9 +62,6 @@ class Analyze_All_Function():
     # 为搜索按钮侦测
     def search_check_bind(self):
         self.search_run_result=self.button_search.bind("<Button-1>", lambda event_1: self.thread_search_open_chrom())
-    # 为12306抢票功能创建按钮侦测
-    def windows_12306_bind(self):
-        self.windows_12306_run=self.button_12306_windows.bind("<Button-1>", lambda event_3: Run_Function_12306_All())
     # 创建下载进度条
     def progress_bar(self):
         self.file_size=self.respond.getheader("Content-Length")
@@ -186,6 +185,5 @@ if __name__=="__main__":
     button_windows=run.Windows_Button()
     thread_pool_run=run.thread_pool_concurrent()
     main_loop=run.main_loop()
-
 
 

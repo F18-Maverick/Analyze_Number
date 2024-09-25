@@ -175,6 +175,3 @@ if __name__=="__main__":
     button_windows=run.Windows_Button()
     thread_pool_run=run.thread_pool_concurrent()
     main_loop=run.main_loop()
-
-
-
