@@ -1,8 +1,10 @@
+import json
+import tkinter
+import urllib.request
+from tkinter import messagebox
 class download_function:
     def __init__(self, Enter_space):
         self.entery_text=Enter_space
-    # 接受url并爬取
-    def Downloader_get(self):
         self.read_respond=None
         self.header={
             "User-Agent":

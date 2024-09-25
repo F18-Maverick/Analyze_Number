@@ -1,5 +1,5 @@
-import tkinter
 import webbrowser
+import tkinter.messagebox
 class search_url:
     def __init__(self, Enter_space):
         self.entery_text = Enter_space

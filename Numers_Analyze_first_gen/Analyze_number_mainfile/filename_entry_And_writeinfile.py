@@ -1,5 +1,8 @@
+import tkinter
 class file_name_entery:
-    def __init__(self, computer_width_information, computer_height_information):
+    def __init__(self, computer_width_information, computer_height_information, File_type, response):
+        self.file_type=File_type
+        self.read_respond=response
         self.computer_info_width=computer_width_information
         self.computer_info_height=computer_height_information
     # 用户输入下载文件的名字
