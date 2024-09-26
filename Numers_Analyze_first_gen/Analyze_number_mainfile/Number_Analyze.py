@@ -19,7 +19,7 @@ class Analyze_All_Function():
         self.screen_y=int((self.computer_info_height-600)/2)
         self.size_position_str="{}x{}+{}+{}".format(self.Windows_width, self.Windows_height, self.screen_x, self.screen_y)
         self.New_Windows=self.Windows.geometry(self.size_position_str)
-        self.windows_icon=self.Windows.iconbitmap(r"download_photo.ico")
+        self.windows_icon=self.Windows.iconbitmap(r"./prog_addition/download_photo.ico")
     def Entry_Function(self):
         self.entery=tkinter.Entry(
             self.Windows, background="#FFFFFF", foreground="#4B0082",
@@ -54,6 +54,7 @@ class Analyze_All_Function():
         self.entery_get = self.entery.get()
         return self.entery_get
     def filename_get_and_writein(self):
+        self.conditiion=0
         self.filename_entry_get=None
         self.filename_entry_get=self.file_name_entery.get()
         self.windows_filename_quite=self.windows_filename.destroy()
@@ -62,6 +63,11 @@ class Analyze_All_Function():
             self.writing_type = "wb"
             with open(self.file_name, self.writing_type) as self.creat_file:
                 self.creat_file.write(self.read_respond)
+            self.conditiion+=1
+        while True:
+            if self.conditiion==1:
+                self.okay_box=tkinter.messagebox.showinfo(title="download", message="the file is downloaded successfully!")
+                break
     def Downloader_get(self):
         self.read_respond=None
         self.header={
@@ -90,7 +96,7 @@ class Analyze_All_Function():
             self.count_limit=self.text_list_url_type.index(self.semicolon)
             for b in range(self.element_position + 1, self.count_limit):
                 self.judge_type_url += self.text_list_url_type[b]
-            with open("url_type.json", "r", encoding="utf-8") as self.url_type_file:
+            with open(r"./prog_addition/url_type.json", "r", encoding="utf-8") as self.url_type_file:
                 self.file_data = json.load(self.url_type_file)
             self.content = self.file_data[0]
             self.file_type_in_dic = []
@@ -105,7 +111,7 @@ class Analyze_All_Function():
             self.filename=self.filename_windows()
     def filename_windows(self):
         self.windows_filename=tkinter.Toplevel()
-        self.windows_filename_icon=self.windows_filename.iconbitmap(r"download_photo.ico")
+        self.windows_filename_icon=self.windows_filename.iconbitmap(r"./prog_addition/download_photo.ico")
         self.file_name_entery = tkinter.Entry(
             self.windows_filename, background="#FFFFFF", foreground="#4B0082",
             selectbackground="#FFFF00", selectforeground="#DC143C", font=("宋体", 15, "underline"),
