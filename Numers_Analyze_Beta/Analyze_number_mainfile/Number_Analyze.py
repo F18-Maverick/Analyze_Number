@@ -8,18 +8,18 @@ import tkinter.messagebox
 from concurrent.futures import ThreadPoolExecutor
 class Analyze_All_Function():
     def __init__(self):
-        self.total_process=0
         self.Windows=tkinter.Tk()
         self.title=self.Windows.title("Numbers Analyze tool")
         self.Windows_height=600
         self.Windows_width=1000
-        self.progress_windows=None
+        self.progress_windows['value']=0
         self.unsizeale=self.Windows.resizable(False, False)
         self.computer_info_height=self.Windows.winfo_screenheight()
         self.computer_info_width=self.Windows.winfo_screenwidth()
         self.screen_x=int((self.computer_info_width-1000)/2)
         self.screen_y=int((self.computer_info_height-600)/2)
-        self.size_position_str="{}x{}+{}+{}".format(self.Windows_width, self.Windows_height, self.screen_x, self.screen_y)
+        self.size_position_str="{}x{}+{}+{}".format(
+            self.Windows_width, self.Windows_height, self.screen_x, self.screen_y)
         self.New_Windows=self.Windows.geometry(self.size_position_str)
         self.windows_icon=self.Windows.iconbitmap(r"./prog_addition/download_photo.ico")
     def Entry_Function(self):
@@ -46,12 +46,16 @@ class Analyze_All_Function():
         self.y_1=40
         self.button_search_place_S_D=self.button_search.place(x=self.x_1, y=self.y_1, anchor="ne")
     def download_check_bind(self):
-        self.downloader_run_result = self.button_download.bind("<Button-1>", lambda event: self.thread_spider())
+        self.downloader_run_result = self.button_download.bind(
+            "<Button-1>", lambda event: self.thread_spider())
     def search_check_bind(self):
-        self.search_run_result=self.button_search.bind("<Button-1>", lambda event_1: self.thread_search_open_chrom())
+        self.search_run_result=self.button_search.bind(
+            "<Button-1>", lambda event_1: self.thread_search_open_chrom())
     def progress_bar(self):
-        self.file_size=self.respond.getheader("Content-Length")
-        self.progress_windows=ttk.Progressbar(self.Windows, orient="horizontal", length=300, mode="determinate")
+        self.windows_process_bar = tkinter.Toplevel()
+        self.windows_process_bar_icon = self.windows_filename.iconbitmap(r"./prog_addition/download_photo.ico")
+        self.progress_windows=ttk.Progressbar(
+            self.Windows, orient="horizontal", length=300, mode="determinate")
         self.progress_windows.pack(pady=20)
     def url_get(self):
         self.entery_get = self.entery.get()
@@ -86,10 +90,10 @@ class Analyze_All_Function():
                 title="enter error", message="You MUST enter a url which you want to download!")
         else:
             self.add_url_headers=urllib.request.Request(url=self.Url_Get, headers=self.header)
-            self.total_process+=100
+            self.progress_windows['value']+=100
             self.respond=urllib.request.urlopen(self.add_url_headers)
             self.read_respond=self.respond.read()
-            self.total_process+=100
+            self.progress_windows['value']+=100
             self.url_type = self.respond.getheader("Content-Type")
             self.text_list_url_type = []
             for a in self.url_type:
@@ -101,7 +105,7 @@ class Analyze_All_Function():
             self.judge_type_url = ""
             self.count_limit=None
             self.count_limit=self.text_list_url_type.index(self.semicolon)
-            self.total_process+=100
+            self.progress_windows['value']+=100
             for b in range(self.element_position + 1, self.count_limit):
                 self.judge_type_url += self.text_list_url_type[b]
             with open(r"./prog_addition/url_type.json", "r", encoding="utf-8") as self.url_type_file:
@@ -150,7 +154,8 @@ class Analyze_All_Function():
     def search_open_chrome(self):
         self.url_open=self.url_get()
         if self.url_open==None or self.url_open==' ':
-            self.error_messagebox_search = tkinter.messagebox.showerror(title="enter error", message="You MUST enter a url which you want to download!")
+            self.error_messagebox_search = tkinter.messagebox.showerror(
+                title="enter error", message="You MUST enter a url which you want to download!")
         else:
             self.webbrowser_open_url=webbrowser.open(self.url_open)
     def thread_spider(self):
@@ -176,3 +181,31 @@ if __name__=="__main__":
     button_windows=run.Windows_Button()
     thread_pool_run=run.thread_pool_concurrent()
     main_loop=run.main_loop()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+r"""
+Traceback (most recent call last):
+  File "D:\project\python\pythonProject1\Web_Crawler\Number_Analyze\Numers_Analyze_Beta\Analyze_number_mainfile\Number_Analyze.py", line 179, in <module>
+    run=Analyze_All_Function()
+        ^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\project\python\pythonProject1\Web_Crawler\Number_Analyze\Numers_Analyze_Beta\Analyze_number_mainfile\Number_Analyze.py", line 15, in __init__
+    self.progress_windows['value']=0
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Analyze_All_Function' object has no attribute 'progress_windows'
+"""
