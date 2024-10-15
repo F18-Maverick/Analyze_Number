@@ -1,2 +1,0 @@
-class ticketConfigException(Exception):
-    pass
