@@ -12,7 +12,7 @@ class Analyze_All_Function():
         self.title=self.Windows.title("Numbers Analyze tool")
         self.Windows_height=600
         self.Windows_width=1000
-        self.progress_windows['value']=0
+        self.progress_windows=None
         self.unsizeale=self.Windows.resizable(False, False)
         self.computer_info_height=self.Windows.winfo_screenheight()
         self.computer_info_width=self.Windows.winfo_screenwidth()
@@ -53,10 +53,12 @@ class Analyze_All_Function():
             "<Button-1>", lambda event_1: self.thread_search_open_chrom())
     def progress_bar(self):
         self.windows_process_bar = tkinter.Toplevel()
-        self.windows_process_bar_icon = self.windows_filename.iconbitmap(r"./prog_addition/download_photo.ico")
+        self.windows_process_bar_icon = self.windows_process_bar.iconbitmap(r"./prog_addition/download_photo.ico")
         self.progress_windows=ttk.Progressbar(
-            self.Windows, orient="horizontal", length=300, mode="determinate")
+            self.windows_process_bar, orient="horizontal", length=300, mode="determinate")
         self.progress_windows.pack(pady=20)
+        if self.progress_windows['value']==300:
+            pass
     def url_get(self):
         self.entery_get = self.entery.get()
         return self.entery_get
@@ -167,7 +169,8 @@ class Analyze_All_Function():
         self.thread_open_url=threading.Thread(target=self.search_open_chrome, name="thread2", daemon=True)
         self.thread_open_url.start()
     def thread_getfilename_and_wirtein(self):
-        self.thread_get_filename_and_wirtein=threading.Thread(target=self.filename_get_and_writein, name="thread3", daemon=True)
+        self.thread_get_filename_and_wirtein=threading.Thread(
+            target=self.filename_get_and_writein, name="thread3", daemon=True)
         self.thread_get_filename_and_wirtein.start()
     def thread_pool_concurrent(self):
         self.thread_pool = ThreadPoolExecutor(max_workers=None)
