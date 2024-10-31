@@ -54,6 +54,7 @@ class Analyze_All_Function():
     def progress_bar(self):
         self.windows_process_bar = tkinter.Toplevel()
         self.windows_process_bar_icon = self.windows_process_bar.iconbitmap(r"./prog_addition/download_photo.ico")
+        self.title_2=self.windows_process_bar.title("process bar")
         self.progress_windows=ttk.Progressbar(
             self.windows_process_bar, orient="horizontal", length=300, mode="determinate")
         self.progress_windows.pack(pady=20)
@@ -92,10 +93,8 @@ class Analyze_All_Function():
                 title="enter error", message="You MUST enter a url which you want to download!")
         else:
             self.add_url_headers=urllib.request.Request(url=self.Url_Get, headers=self.header)
-            self.progress_windows['value']+=100
             self.respond=urllib.request.urlopen(self.add_url_headers)
             self.read_respond=self.respond.read()
-            self.progress_windows['value']+=100
             self.url_type = self.respond.getheader("Content-Type")
             self.text_list_url_type = []
             for a in self.url_type:
@@ -107,7 +106,6 @@ class Analyze_All_Function():
             self.judge_type_url = ""
             self.count_limit=None
             self.count_limit=self.text_list_url_type.index(self.semicolon)
-            self.progress_windows['value']+=100
             for b in range(self.element_position + 1, self.count_limit):
                 self.judge_type_url += self.text_list_url_type[b]
             with open(r"./prog_addition/url_type.json", "r", encoding="utf-8") as self.url_type_file:
@@ -201,14 +199,3 @@ if __name__=="__main__":
 
 
 
-
-r"""
-Traceback (most recent call last):
-  File "D:\project\python\pythonProject1\Web_Crawler\Number_Analyze\Numers_Analyze_Beta\Analyze_number_mainfile\Number_Analyze.py", line 179, in <module>
-    run=Analyze_All_Function()
-        ^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\project\python\pythonProject1\Web_Crawler\Number_Analyze\Numers_Analyze_Beta\Analyze_number_mainfile\Number_Analyze.py", line 15, in __init__
-    self.progress_windows['value']=0
-    ^^^^^^^^^^^^^^^^^^^^^
-AttributeError: 'Analyze_All_Function' object has no attribute 'progress_windows'
-"""
