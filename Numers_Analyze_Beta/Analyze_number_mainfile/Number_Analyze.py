@@ -8,6 +8,7 @@ import tkinter.messagebox
 from concurrent.futures import ThreadPoolExecutor
 class Analyze_All_Function():
     def __init__(self):
+        self.file_num=0
         self.Windows=tkinter.Tk()
         self.title=self.Windows.title("Numbers Analyze tool")
         self.Windows_height=600
@@ -52,11 +53,8 @@ class Analyze_All_Function():
         self.search_run_result=self.button_search.bind(
             "<Button-1>", lambda event_1: self.thread_search_open_chrom())
     def progress_bar(self):
-        self.windows_process_bar = tkinter.Toplevel()
-        self.windows_process_bar_icon = self.windows_process_bar.iconbitmap(r"./prog_addition/download_photo.ico")
-        self.title_2=self.windows_process_bar.title("process bar")
         self.progress_windows=ttk.Progressbar(
-            self.windows_process_bar, orient="horizontal", length=300, mode="determinate")
+            orient="horizontal", length=300, mode="determinate")
         self.progress_windows.pack(pady=20)
         if self.progress_windows['value']==300:
             pass
@@ -92,6 +90,7 @@ class Analyze_All_Function():
             self.error_messagebox_download=tkinter.messagebox.showerror(
                 title="enter error", message="You MUST enter a url which you want to download!")
         else:
+            self.file_num+=1
             self.add_url_headers=urllib.request.Request(url=self.Url_Get, headers=self.header)
             self.respond=urllib.request.urlopen(self.add_url_headers)
             self.read_respond=self.respond.read()
@@ -122,6 +121,7 @@ class Analyze_All_Function():
             self.file_type=self.file_type_in_dic[self.file_type_position]
             self.filename=self.filename_windows()
     def filename_windows(self):
+        self.file="file {}".format(self.file_num)
         self.windows_filename=tkinter.Toplevel()
         self.windows_filename_icon=self.windows_filename.iconbitmap(r"./prog_addition/download_photo.ico")
         self.file_name_entery = tkinter.Entry(
@@ -131,7 +131,7 @@ class Analyze_All_Function():
         self.x_entry = 50
         self.y_entry = 80 / 3
         self.file_name_entery.place(x=self.x_entry, y=self.y_entry)
-        self.title_1=self.windows_filename.title("Please write a file title.")
+        self.title_1=self.windows_filename.title("Please write a file title for {}.".format(self.file))
         self.windows_filename_height=200
         self.windows_filename_width=500
         self.unresizeable=self.windows_filename.resizable(False, False)

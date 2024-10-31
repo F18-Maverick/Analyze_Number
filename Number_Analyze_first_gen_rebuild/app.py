@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import messagebox
 import threading
 import webbrowser
 from downloader import Downloader
@@ -38,7 +38,7 @@ class AnalyzeAllFunction:
         except Exception as e:
             messagebox.showerror("下载错误", str(e))
         finally:
-            self.downloader.progress_window.destroy()
+            pass
     def open_url(self):
         url = self.entry.get()
         if not url:
@@ -47,3 +47,20 @@ class AnalyzeAllFunction:
         webbrowser.open(url)
     def run(self):
         self.window.mainloop()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
