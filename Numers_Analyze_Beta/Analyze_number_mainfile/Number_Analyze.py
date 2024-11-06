@@ -8,7 +8,9 @@ import tkinter.messagebox
 from concurrent.futures import ThreadPoolExecutor
 class Analyze_All_Function():
     def __init__(self):
+        #self.canvas=tkinter.Canvas()
         self.file_num=0
+        self.file="file {}".format(self.file_num)
         self.Windows=tkinter.Tk()
         self.title=self.Windows.title("Numbers Analyze tool")
         self.Windows_height=600
@@ -46,6 +48,9 @@ class Analyze_All_Function():
         self.x_1=int(self.Windows_width - self.button_search_width)
         self.y_1=40
         self.button_search_place_S_D=self.button_search.place(x=self.x_1, y=self.y_1, anchor="ne")
+    def windows_frame(self):
+        pass
+        #self.url_entry_task=self.canvas.create_line(50, 50, 350, 350, fill="black", width=2)
     def download_check_bind(self):
         self.downloader_run_result = self.button_download.bind(
             "<Button-1>", lambda event: self.thread_spider())
@@ -90,6 +95,8 @@ class Analyze_All_Function():
             self.error_messagebox_download=tkinter.messagebox.showerror(
                 title="enter error", message="You MUST enter a url which you want to download!")
         else:
+            self.thread_process_bar = threading.Thread(target=self.progress_bar(), name="thread4", daemon=True)
+            self.thread_process_bar.start()
             self.file_num+=1
             self.add_url_headers=urllib.request.Request(url=self.Url_Get, headers=self.header)
             self.respond=urllib.request.urlopen(self.add_url_headers)
@@ -121,7 +128,6 @@ class Analyze_All_Function():
             self.file_type=self.file_type_in_dic[self.file_type_position]
             self.filename=self.filename_windows()
     def filename_windows(self):
-        self.file="file {}".format(self.file_num)
         self.windows_filename=tkinter.Toplevel()
         self.windows_filename_icon=self.windows_filename.iconbitmap(r"./prog_addition/download_photo.ico")
         self.file_name_entery = tkinter.Entry(
@@ -155,14 +161,12 @@ class Analyze_All_Function():
         self.url_open=self.url_get()
         if self.url_open==None or self.url_open==' ':
             self.error_messagebox_search = tkinter.messagebox.showerror(
-                title="enter error", message="You MUST enter a url which you want to download!")
+                title="enter error", message="You MUST enter a url witch you want to download!")
         else:
             self.webbrowser_open_url=webbrowser.open(self.url_open)
     def thread_spider(self):
         self.thread_run=threading.Thread(target=self.Downloader_get, name="thread1", daemon=True)
         self.thread_run.start()
-        self.thread_process_bar=threading.Thread(target=self.progress_bar(), name="thread4", daemon=True)
-        self.thread_process_bar.start()
     def thread_search_open_chrom(self):
         self.thread_open_url=threading.Thread(target=self.search_open_chrome, name="thread2", daemon=True)
         self.thread_open_url.start()
