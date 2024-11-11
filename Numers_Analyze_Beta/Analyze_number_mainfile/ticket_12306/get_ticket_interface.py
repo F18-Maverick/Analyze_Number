@@ -1,27 +1,5 @@
 import tkinter
-class choose_start_station:
-    def __init__(self, computer_info_width, computer_info_height):
-        self.windows_choose_start_station = tkinter.Toplevel()
-        self.windows_choose_start_station_icon = self.windows_choose_start_station.iconbitmap(
-            r"./12306_prog_addition/download_photo.ico")
-        self.start_station_entery = tkinter.Entry(
-            self.windows_choose_start_station, background="#FFFFFF", foreground="#4B0082",
-            selectbackground="#FFFF00", selectforeground="#DC143C", font=("宋体", 15, "underline"),
-            width=40, relief="solid", insertwidth=1)
-        self.x_entry = 50
-        self.y_entry = 80 / 3
-        self.start_station_entery.place(x=self.x_entry, y=self.y_entry)
-        self.title_1 = self.windows_choose_start_station.title("请选择出发车站")
-        self.windows_choose_start_station_height = 600
-        self.windows_choose_start_station_width = 500
-        self.unresizeable = self.windows_choose_start_station.resizable(False, False)
-        self.screen_choose_start_station_x = int((computer_info_width - self.windows_choose_start_station_width) / 2)
-        self.screen_choose_start_station_y = int((computer_info_height - self.windows_choose_start_station_height) / 2)
-        self.windows_choose_start_station_position_str = "{}x{}+{}+{}".format(
-            self.windows_choose_start_station_width, self.windows_choose_start_station_height,
-            self.screen_choose_start_station_x, self.screen_choose_start_station_y)
-        self.New_choose_start_station_Windows = self.windows_choose_start_station.geometry(
-            self.windows_choose_start_station_position_str)
+from all_threads import thread_all
 class Get_ticket_interface:
     def __init__(self):
         self.Windows = tkinter.Tk()
@@ -36,7 +14,7 @@ class Get_ticket_interface:
         self.size_position_str = "{}x{}+{}+{}".format(
             self.Windows_width, self.Windows_height, self.screen_x, self.screen_y)
         self.New_Windows = self.Windows.geometry(self.size_position_str)
-        self.windows_icon = self.Windows.iconbitmap(r"./12306_prog_addition/download_photo.ico")
+        self.windows_icon = self.Windows.iconbitmap(r"./ticket_12306_prog_addition/download_photo.ico")
         self.entery_start=None
         self.label_start=tkinter.Label(self.Windows, text="出发城市/车站:", font=("微软雅黑", 12))
         self.label_start_pack=self.label_start.pack(side="top", pady=20)
@@ -74,6 +52,9 @@ class Get_ticket_interface:
         self.x=int(self.Windows_width-self.button_search_start_station_width)
         self.y=25
         self.butoon_search_start_station_place=self.button_search_start_station.place(x=self.x, y=self.y, anchor="ne")
+        self.use_choose_start_station_UI=self.button_search_start_station.bind(
+            "<Button-1>", lambda event: thread_all().choose_start_station_UI_thread(
+                self.computer_info_width, self.computer_info_height))
         self.button_search_end_station=tkinter.Button(
             self.Windows, text="查询车站", width=8, height=1, font=("Arial", 8, "underline"))
         self.button_search_end_station_width = self.button_search_end_station.winfo_width()
@@ -81,6 +62,9 @@ class Get_ticket_interface:
         self.x_1=int(self.Windows_width - self.button_search_end_station_width)
         self.y_1=75
         self.button_search_end_station_place=self.button_search_end_station.place(x=self.x_1, y=self.y_1, anchor="ne")
+        self.use_choose_end_station_UI=self.button_search_end_station.bind(
+            "<Button-1>", lambda event_1: thread_all().choose_end_station_UI_thread(
+                self.computer_info_width, self.computer_info_height))
         self.button_search_date = tkinter.Button(
             self.Windows, text="选择日期", width=8, height=1, font=("Arial", 8, "underline"))
         self.button_search_date_width = self.button_search_date.winfo_width()
@@ -88,6 +72,9 @@ class Get_ticket_interface:
         self.x_2 = int(self.Windows_width - self.button_search_date_width)
         self.y_2 = 125
         self.button_search_date_place = self.button_search_date.place(x=self.x_2, y=self.y_2, anchor="ne")
+        self.use_choose_start_time_UI = self.button_search_date.bind(
+            "<Button-1>", lambda event_1: thread_all().choose_start_time_UI_thread(
+                self.computer_info_width, self.computer_info_height))
 
 
 
