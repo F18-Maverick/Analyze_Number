@@ -1,6 +1,6 @@
 import tkinter
-from ..analyze_json.analyze_city_json import all_city
-from ..analyze_json.analyze_city_station_json import all_city_station
+from analyze_json.analyze_city_json import all_city
+from analyze_json.analyze_city_station_json import all_city_station
 class choose_end_station:
     def __init__(self, computer_info_width, computer_info_height):
         self.all_city_name=all_city().get_city_name()

@@ -1,7 +1,7 @@
 import threading
-from choose_UI.choose_start_time_UI import choose_start_time
-from choose_UI.choose_end_station_UI import choose_end_station
-from choose_UI.choose_start_station_UI import choose_start_station
+from choose_start_time_UI import choose_start_time
+from choose_end_station_UI import choose_end_station
+from choose_start_station_UI import choose_start_station
 class thread_all:
     def choose_start_station_UI_thread(self, computer_width, computer_height):
         self.thread_choose_UI=threading.Thread(target=choose_start_station, args=(computer_width, computer_height),

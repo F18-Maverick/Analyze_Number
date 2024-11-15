@@ -1,8 +1,9 @@
 import tkinter
-from ..analyze_json.analyze_city_json import all_city
-from ..analyze_json.analyze_city_station_json import all_city_station
+from analyze_json.analyze_city_json import all_city
+from analyze_json.analyze_city_station_json import all_city_station
 class choose_start_station:
     def __init__(self, computer_info_width, computer_info_height):
+        self.get_text_res=None
         self.all_city_name=all_city().get_city_name()
         self.all_city_adCode=all_city().get_city_adCode()
         self.all_city_code=all_city().get_city_code()
@@ -32,6 +33,31 @@ class choose_start_station:
             self.screen_choose_start_station_x, self.screen_choose_start_station_y)
         self.New_choose_start_station_Windows = self.windows_choose_start_station.geometry(
             self.windows_choose_start_station_position_str)
+        self.button_research_get_info()
+        self.button_sure_get_info()
+    def get_text(self):
+        self.get_text_res=self.start_station_entery.get()
+        with open("data_socket_start_station.log", "w", encoding="utf-8") as datalog_write:
+            datalog_write.write(self.get_text_res)
+    def destroy_window(self):
+        self.windows_choose_start_station.destroy()
+    def sure_button_operate(self):
+        self.get_text()
+        self.destroy_window()
+    def button_research_get_info(self):
+        self.button_get_start_station = tkinter.Button(
+            self.windows_choose_start_station, text="查询车站", width=8, height=1, font=("Arial", 8, "underline"))
+        self.button_get_start_place=self.button_get_start_station.pack(side=tkinter.TOP)
+        self.bind_func_research=self.button_get_start_station.bind("<Button-1>", lambda event: self.get_text())
+        for all_city_name in self.all_city_name:
+            if self.get_text_res==all_city_name:
+                self.label=tkinter.Label(self.windows_choose_start_station, text="{}(城)".format(all_city_name))
+                self.pack=self.label.pack(pady=10)
+    def button_sure_get_info(self):
+        self.button_get_start_station_sure = tkinter.Button(
+            self.windows_choose_start_station, text="确认", width=8, height=1, font=("Arial", 8, "underline"))
+        self.button_get_start_place_sure=self.button_get_start_station_sure.pack(side=tkinter.BOTTOM)
+        self.bind_func_sure=self.button_get_start_station_sure.bind("<Button-1>", lambda event: self.sure_button_operate())
 
 
 
