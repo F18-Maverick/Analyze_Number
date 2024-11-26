@@ -55,7 +55,6 @@ class Get_ticket_interface:
         self.use_choose_start_station_UI=self.button_search_start_station.bind(
             "<Button-1>", lambda event: thread_all().choose_start_station_UI_thread(
                 self.computer_info_width, self.computer_info_height))
-        print(self.use_choose_start_station_UI)
         self.button_search_end_station=tkinter.Button(
             self.Windows, text="查询车站", width=8, height=1, font=("Arial", 8, "underline"))
         self.button_search_end_station_width = self.button_search_end_station.winfo_width()

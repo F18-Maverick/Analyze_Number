@@ -1,3 +1,4 @@
+import os
 import tkinter
 from analyze_json.analyze_city_json import all_city
 from analyze_json.analyze_city_station_json import all_city_station
@@ -21,7 +22,7 @@ class choose_end_station:
         self.x_entry = 50
         self.y_entry = 80 / 3
         self.end_station_entery.place(x=self.x_entry, y=self.y_entry)
-        self.title_1 = self.windows_choose_end_station.title("请选择日期和时间")
+        self.title_1 = self.windows_choose_end_station.title("请选择到达车站")
         self.windows_choose_end_station_height = 300
         self.windows_choose_end_station_width = 500
         self.unresizeable = self.windows_choose_end_station.resizable(False, False)
@@ -32,6 +33,37 @@ class choose_end_station:
             self.screen_choose_end_station_x, self.screen_choose_end_station_y)
         self.New_choose_end_station_Windows = self.windows_choose_end_station.geometry(
             self.windows_choose_end_station_position_str)
+        self.button_research_get_info()
+        self.button_sure_get_info()
+        print(self.all_city_name, "\n", self.all_city_station_name)
+    def search_button_operate(self):
+        self.get_text_res = self.end_station_entery.get()
+        for all_city_name in self.all_city_name:
+            if self.get_text_res == all_city_name:
+                self.label = tkinter.Label(self.windows_choose_end_station, text="{}(城)".format(all_city_name))
+                self.pack = self.label.pack(pady=30)
+        for all_city_station_name in self.all_city_station_name:
+            if self.get_text_res == all_city_station_name:
+                self.label = tkinter.Label(self.windows_choose_end_station, text="{}(站)".format(all_city_station_name))
+                self.pack = self.label.pack(pady=30)
+    def sure_button_operate(self):
+        self.get_text_res = self.end_station_entery.get()
+        self.temp_dir = './temp'
+        if not os.path.exists(self.temp_dir):
+            os.makedirs(self.temp_dir)
+        with open(os.path.join(self.temp_dir, "data_socket_end_station.log"), "w", encoding="utf-8") as datalog_write:
+            datalog_write.write(self.get_text_res)
+        self.windows_choose_end_station.destroy()
+    def button_research_get_info(self):
+        self.button_get_end_station = tkinter.Button(
+            self.windows_choose_end_station, text="查询车站", width=8, height=1, font=("Arial", 8, "underline"))
+        self.button_get_end_place = self.button_get_end_station.pack(side=tkinter.TOP)
+        self.bind_func_research = self.button_get_end_station.bind("<Button-1>", lambda event: self.search_button_operate())
+    def button_sure_get_info(self):
+        self.button_get_end_station_sure = tkinter.Button(
+            self.windows_choose_end_station, text="确认", width=8, height=1, font=("Arial", 8, "underline"))
+        self.button_get_end_place_sure = self.button_get_end_station_sure.pack(side=tkinter.BOTTOM)
+        self.bind_func_sure = self.button_get_end_station_sure.bind("<Button-1>", lambda event: self.sure_button_operate())
 
 
 

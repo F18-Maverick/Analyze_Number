@@ -35,17 +35,17 @@ class choose_start_station:
             self.windows_choose_start_station_position_str)
         self.button_research_get_info()
         self.button_sure_get_info()
-        print(self.all_city_name, self.all_city_station_name)
+        print(self.all_city_name, "\n", self.all_city_station_name)
     def search_button_operate(self):
         self.get_text_res = self.start_station_entery.get()
         for all_city_name in self.all_city_name:
             if self.get_text_res==all_city_name:
                 self.label=tkinter.Label(self.windows_choose_start_station, text="{}(城)".format(all_city_name))
-                self.pack=self.label.pack(pady=10)
+                self.pack=self.label.pack(pady=30)
         for all_city_station_name in self.all_city_station_name:
             if self.get_text_res==all_city_station_name:
                 self.label = tkinter.Label(self.windows_choose_start_station, text="{}(站)".format(all_city_station_name))
-                self.pack = self.label.pack(pady=10)
+                self.pack = self.label.pack(pady=30)
     def sure_button_operate(self):
         self.get_text_res = self.start_station_entery.get()
         self.temp_dir = './temp'
