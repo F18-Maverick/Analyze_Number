@@ -2,9 +2,12 @@ import tkinter
 from all_threads import thread_all
 class Get_ticket_interface:
     def __init__(self):
+        self.entery_start=None
+        self.entery_end=None
+        self.entery_date=None
         self.Windows = tkinter.Tk()
         self.title = self.Windows.title("Numbers Analyze tool")
-        self.Windows_height = 600
+        self.Windows_height = 450
         self.Windows_width = 1000
         self.progress_windows = None
         self.computer_info_height = self.Windows.winfo_screenheight()
@@ -75,7 +78,13 @@ class Get_ticket_interface:
         self.use_choose_start_time_UI = self.button_search_date.bind(
             "<Button-1>", lambda event_1: thread_all().choose_start_time_UI_thread(
                 self.computer_info_width, self.computer_info_height))
-
+        self.button_search_sure=tkinter.Button(
+            self.Windows, text="确认", width=25, height=5, font=("Arial", 10, "underline"))
+        self.button_search_sure_width=self.button_search_sure.winfo_width()
+        self.button_search_sure_height=self.button_search_sure.winfo_height()
+        self.x_3=int(self.Windows_width-self.button_search_sure_width)
+        self.y_3=300
+        self.button_search_sure_place=self.button_search_sure.place(x=self.x_3/2, y=self.y_3, anchor="center")
 
 
 
