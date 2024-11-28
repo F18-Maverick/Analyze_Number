@@ -1,3 +1,4 @@
+import os
 import tkinter
 from all_threads import thread_all
 class Get_ticket_interface:
@@ -47,6 +48,20 @@ class Get_ticket_interface:
         self.x_entry_date = 50
         self.y_entry_date = 150
         self.entery_date.place(x=self.x_entry_date, y=self.y_entry_date)
+    def get_text(self):
+        print(1)
+        self.start_station=self.entery_start.get()
+        self.end_station=self.entery_end.get()
+        self.date=self.entery_date.get()
+        self.temp_dir = './temp'
+        if not os.path.exists(self.temp_dir):
+            os.makedirs(self.temp_dir)
+        with open(os.path.join(self.temp_dir, "data_socket_start_station.log"), "w", encoding="utf-8") as datalog_write:
+            datalog_write.write(self.start_station)
+        with open(os.path.join(self.temp_dir, "data_socket_end_station.log"), "w", encoding="utf-8") as datalog_write_1:
+            datalog_write_1.write(self.end_station)
+        with open(os.path.join(self.temp_dir, "data_socket_date_station.log"), "w", encoding="utf-8") as datalog_write_2:
+            datalog_write_2.write(self.date)
     def Windows_Button(self):
         self.button_search_start_station=tkinter.Button(
             self.Windows, text="查询车站", width=8, height=1, font=("Arial", 8, "underline"))
@@ -85,7 +100,8 @@ class Get_ticket_interface:
         self.x_3=int(self.Windows_width-self.button_search_sure_width)
         self.y_3=300
         self.button_search_sure_place=self.button_search_sure.place(x=self.x_3/2, y=self.y_3, anchor="center")
-
+        self.sure_button_operate = self.button_search_sure.bind(
+            "<Button-1>", lambda event_1: self.get_text())
 
 
 
