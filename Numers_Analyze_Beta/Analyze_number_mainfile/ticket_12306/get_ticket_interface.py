@@ -1,5 +1,7 @@
 import os
 import tkinter
+import threading
+import tkinter.messagebox
 from all_threads import thread_all
 class Get_ticket_interface:
     def __init__(self):
@@ -48,20 +50,53 @@ class Get_ticket_interface:
         self.x_entry_date = 50
         self.y_entry_date = 150
         self.entery_date.place(x=self.x_entry_date, y=self.y_entry_date)
-    def get_text(self):
-        print(1)
+    def get_text_condition(self):
         self.start_station=self.entery_start.get()
         self.end_station=self.entery_end.get()
         self.date=self.entery_date.get()
         self.temp_dir = './temp'
         if not os.path.exists(self.temp_dir):
             os.makedirs(self.temp_dir)
-        with open(os.path.join(self.temp_dir, "data_socket_start_station.log"), "w", encoding="utf-8") as datalog_write:
-            datalog_write.write(self.start_station)
-        with open(os.path.join(self.temp_dir, "data_socket_end_station.log"), "w", encoding="utf-8") as datalog_write_1:
-            datalog_write_1.write(self.end_station)
-        with open(os.path.join(self.temp_dir, "data_socket_date_station.log"), "w", encoding="utf-8") as datalog_write_2:
-            datalog_write_2.write(self.date)
+            with open(os.path.join(self.temp_dir, "data_socket_start_station.log"), "w", encoding="utf-8") as datalog_write:
+                datalog_write.write(self.start_station)
+            with open(os.path.join(self.temp_dir, "data_socket_end_station.log"), "w", encoding="utf-8") as datalog_write_1:
+                datalog_write_1.write(self.end_station)
+            with open(os.path.join(self.temp_dir, "data_socket_start_date.log"), "w", encoding="utf-8") as datalog_write_2:
+                datalog_write_2.write(self.date)
+        elif os.path.exists(self.temp_dir):
+            with open(os.path.join(self.temp_dir, "data_socket_start_station.log"), "w", encoding="utf-8") as datalog_write:
+                datalog_write.write(self.start_station)
+            with open(os.path.join(self.temp_dir, "data_socket_end_station.log"), "w", encoding="utf-8") as datalog_write_1:
+                datalog_write_1.write(self.end_station)
+            with open(os.path.join(self.temp_dir, "data_socket_start_date.log"), "w", encoding="utf-8") as datalog_write_2:
+                datalog_write_2.write(self.date)
+        self.get_ticket_info_func=thread_all().download_ticket_station_info_thread()
+        self.entery_start.delete(0, tkinter.END)
+        self.entery_end.delete(0, tkinter.END)
+        self.entery_date.delete(0, tkinter.END)
+    def update_info(self):
+        self.temp_dir = './temp'
+        if not os.path.exists(self.temp_dir):
+            self.error_box = tkinter.messagebox.showerror(
+                title="未找到文件",
+                message="请填写购票信息(出发时间, 出发车站, 到达车站)")
+        elif os.path.exists(self.temp_dir):
+            with open(os.path.join(self.temp_dir, "data_socket_start_station.log"), "r", encoding="utf-8") as datalog_read:
+                self.start_place=datalog_read.read()
+            with open(os.path.join(self.temp_dir, "data_socket_end_station.log"), "r", encoding="utf-8") as datalog_read_1:
+                self.end_place=datalog_read_1.read()
+            with open(os.path.join(self.temp_dir, "data_socket_start_date.log"), "r", encoding="utf-8") as datalog_read_2:
+                self.date=datalog_read_2.read()
+            self.entery_start.delete(0, tkinter.END)
+            self.entery_start.insert(0, self.start_place)
+            self.entery_end.delete(0, tkinter.END)
+            self.entery_end.insert(0, self.end_place)
+            self.entery_date.delete(0, tkinter.END)
+            self.entery_date.insert(0, self.date)
+    def update_station_info_thread(self):
+        self.thread_station_info_update=threading.Thread(
+            target=self.update_info, name="thread5", daemon=True)
+        self.thread_station_name_update=self.thread_station_info_update.start()
     def Windows_Button(self):
         self.button_search_start_station=tkinter.Button(
             self.Windows, text="查询车站", width=8, height=1, font=("Arial", 8, "underline"))
@@ -101,7 +136,29 @@ class Get_ticket_interface:
         self.y_3=300
         self.button_search_sure_place=self.button_search_sure.place(x=self.x_3/2, y=self.y_3, anchor="center")
         self.sure_button_operate = self.button_search_sure.bind(
-            "<Button-1>", lambda event_1: self.get_text())
+            "<Button-1>", lambda event_1: self.get_text_condition())
+        self.button_update_info = tkinter.Button(
+            self.Windows, text="同步选择信息(必选)", width=20, height=1, font=("Arial", 8, "underline"))
+        self.button_update_width = self.button_update_info.winfo_width()
+        self.button_update_height = self.button_update_info.winfo_height()
+        self.x_4 = int(self.Windows_width - self.button_update_width)
+        self.y_4 = 200
+        self.button_update_info_place = self.button_update_info.place(x=self.x_4/2, y=self.y_4, anchor="center")
+        self.update_info_control = self.button_update_info.bind(
+            "<Button-1>", lambda event_1: self.update_station_info_thread())
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

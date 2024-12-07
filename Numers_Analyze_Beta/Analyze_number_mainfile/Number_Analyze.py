@@ -8,7 +8,6 @@ import tkinter.messagebox
 from concurrent.futures import ThreadPoolExecutor
 class Analyze_All_Function():
     def __init__(self):
-        #self.canvas=tkinter.Canvas()
         self.file_num=0
         self.file="file {}".format(self.file_num)
         self.Windows=tkinter.Tk()
@@ -50,7 +49,6 @@ class Analyze_All_Function():
         self.button_search_place_S_D=self.button_search.place(x=self.x_1, y=self.y_1, anchor="ne")
     def windows_frame(self):
         pass
-        #self.url_entry_task=self.canvas.create_line(50, 50, 350, 350, fill="black", width=2)
     def download_check_bind(self):
         self.downloader_run_result = self.button_download.bind(
             "<Button-1>", lambda event: self.thread_spider())
@@ -100,7 +98,6 @@ class Analyze_All_Function():
             self.file_num+=1
             self.add_url_headers=urllib.request.Request(url=self.Url_Get, headers=self.header)
             self.respond=urllib.request.urlopen(self.add_url_headers)
-            self.read_respond=self.respond.read()
             self.url_type = self.respond.getheader("Content-Type")
             self.text_list_url_type = []
             for a in self.url_type:
