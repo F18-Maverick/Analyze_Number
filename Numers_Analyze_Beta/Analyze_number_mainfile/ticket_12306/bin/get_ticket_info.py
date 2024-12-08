@@ -36,17 +36,18 @@ class get_ticket_station_info:
             "Cookie":
                 True}
         self.station_name_url="https://kyfw.12306.cn/otn/resources/js/framework/station_name.js?station_version=1.9330"
+        self.train_info_url=\
+            "https://kyfw.12306.cn/otn/leftTicket/queryO?leftTicketDTO.train_date={}&leftTicketDTO.from_station={}&leftTicketDTO.to_station={}&purpose_codes={}"
         self.add_url_headers = urllib.request.Request(url=self.station_name_url, headers=self.header)
         self.response_url=urllib.request.urlopen(self.add_url_headers)
         self.station_name_info=self.response_url.read().decode("utf-8")
         self.count=0
         self.count_1 = []
+        self.count_4=[]
         self.station_info_section_list_index=[]
         self.station_info_section_list=[]
-
         self.station_symbol_list=[]
         self.station_name_list=[]
-
         self.station_info_dict={}
         for every_letter in self.station_name_info:
             self.count+=1
@@ -60,7 +61,7 @@ class get_ticket_station_info:
             self.station_info_section_list.append(self.station_info_section)
         for all_station in self.station_info_section_list:
             self.count_2=0
-            self.station_symbol = ""
+            self.count_3=0
             for symbol_index in range(len(all_station)):
                 if all_station[symbol_index]=="|":
                     self.count_1.append(symbol_index)
@@ -72,10 +73,21 @@ class get_ticket_station_info:
                 for station_name_index in range(self.count_1[all_station_name_index]+1, self.count_1[all_station_name_index+1]):
                     self.station_name+=all_station[station_name_index]
             self.station_name_list.append(self.station_name)
-            for all_station_symbol_index in range(1, 4):
-                self.station_symbol+=all_station[all_station_symbol_index]
+            for symbol_index_1 in range(len(all_station)):
+                if all_station[symbol_index_1]=="|":
+                    self.count_3+=1
+                    if self.count_3==2:
+                        self.count_4.append(symbol_index_1)
+                    elif self.count_3==3:
+                        self.count_4.append(symbol_index_1)
+                        break
+            for all_station_symbol_index in range(len(self.count_4)-1):
+                self.station_symbol=""
+                for station_symbol_index in range(self.count_4[all_station_symbol_index]+1, self.count_4[all_station_symbol_index+1]):
+                    self.station_symbol+=all_station[station_symbol_index]
             self.station_symbol_list.append(self.station_symbol)
-            self.station_info_dict[self.station_name]=self.station_symbol
+        for all_station_info_index in range(len(self.station_name_list)):
+            self.station_info_dict[self.station_name_list[all_station_info_index]]=self.station_symbol_list[all_station_info_index]
         if not os.path.exists(self.temp_dir):
             os.makedirs(self.temp_dir)
         with open(os.path.join(self.temp_dir, "station_name_info.json"), "w", encoding="utf-8") as datalog_write:
@@ -86,7 +98,10 @@ class get_ticket_station_info:
             self.end_city=datalog_city_end_read.read()
         with open(r"./temp/data_socket_start_date.log", "r", encoding="utf-8") as datalog_city_start_date_read:
             self.date_start = datalog_city_start_date_read.read()
-
+        self.station_start_symbol=self.station_info_dict[self.start_city].upper()
+        self.station_end_symbol=self.station_info_dict[self.end_city].upper()
+        self.train_info_url_compleat=self.train_info_url.format(self.date_start, self.station_start_symbol, self.station_end_symbol, "ADULT")
+        print(self.train_info_url_compleat)
 
 
 

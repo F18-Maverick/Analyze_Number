@@ -49,7 +49,10 @@ class choose_start_time:
         self.years=self.start_time_entery_year.get()
         self.months=self.start_time_entery_month.get()
         self.days=self.start_time_entery_day.get()
-        self.get_result="{}-{}-{}".format(self.years, self.months, self.days)
+        if len(self.years)>=2:
+            self.get_result="{}-{}-{}".format(self.years, self.months, self.days)
+        else:
+            self.get_result="{}-{}-0{}".format(self.years, self.months, self.days)
         self.temp_dir = './temp'
         if not os.path.exists(self.temp_dir):
             os.makedirs(self.temp_dir)
