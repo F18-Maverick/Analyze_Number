@@ -1,10 +1,14 @@
 import os
 import json
 import tkinter
+import http.cookiejar
 import urllib.request
 import tkinter.messagebox
 class get_ticket_station_info:
     def __init__(self):
+
+        self.station_start_symbol=None
+        self.station_end_symbol=None
         self.station_name_dict={}
         self.start_city=None
         self.end_city=None
@@ -31,10 +35,16 @@ class get_ticket_station_info:
             self.Download_get_station_info()
     def Download_get_station_info(self):
         self.header = {
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
             "User-Agent":
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0",
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
             "Cookie":
-                True}
+                True
+        }
+        self.cookie_jar = http.cookiejar.CookieJar()
+        self.cookie_handler = urllib.request.HTTPCookieProcessor(self.cookie_jar)
+        self.opener = urllib.request.build_opener(self.cookie_handler)
         self.station_name_url="https://kyfw.12306.cn/otn/resources/js/framework/station_name.js?station_version=1.9330"
         self.train_info_url=\
             "https://kyfw.12306.cn/otn/leftTicket/queryO?leftTicketDTO.train_date={}&leftTicketDTO.from_station={}&leftTicketDTO.to_station={}&purpose_codes={}"
@@ -98,10 +108,24 @@ class get_ticket_station_info:
             self.end_city=datalog_city_end_read.read()
         with open(r"./temp/data_socket_start_date.log", "r", encoding="utf-8") as datalog_city_start_date_read:
             self.date_start = datalog_city_start_date_read.read()
-        self.station_start_symbol=self.station_info_dict[self.start_city].upper()
-        self.station_end_symbol=self.station_info_dict[self.end_city].upper()
+        if self.start_city not in self.station_info_dict:
+            self.error_box = tkinter.messagebox.showerror(
+                title="未找到文件",
+                message="请填写正确的购票信息(出发时间, 出发车站, 到达车站)")
+        else:
+            self.station_start_symbol=self.station_info_dict[self.start_city].upper()
+        if self.end_city not in self.station_info_dict:
+            self.error_box = tkinter.messagebox.showerror(
+                title="未找到文件",
+                message="请填写正确的购票信息(出发时间, 出发车站, 到达车站)")
+        else:
+            self.station_end_symbol=self.station_info_dict[self.end_city].upper()
         self.train_info_url_compleat=self.train_info_url.format(self.date_start, self.station_start_symbol, self.station_end_symbol, "ADULT")
-        print(self.train_info_url_compleat)
+        self.add_url_headers_train_info = urllib.request.Request(url=self.train_info_url_compleat, headers=self.header)
+        self.response_url_train = urllib.request.urlopen(self.add_url_headers_train_info)
+        self.statude_code=self.response_url_train.getcode()
+        self.train_info = self.response_url_train.read().decode("utf-8")
+        print(self.train_info, self.train_info_url_compleat, self.statude_code)
 
 
 
