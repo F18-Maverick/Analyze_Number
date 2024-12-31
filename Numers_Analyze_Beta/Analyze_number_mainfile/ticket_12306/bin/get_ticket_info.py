@@ -6,7 +6,7 @@ import urllib.request
 import tkinter.messagebox
 class get_ticket_station_info:
     def __init__(self):
-
+        self.ticket_all_info_dict=[]
         self.station_start_symbol=None
         self.station_end_symbol=None
         self.station_name_dict={}
@@ -40,7 +40,7 @@ class get_ticket_station_info:
             "User-Agent":
                 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
             "Cookie":
-                True
+                'JSESSIONID=9A3A60B55A2ACC51B24B6742E68E6230; RAIL_EXPIRATION=1582469373862; RAIL_DEVICEID=ERLN34ss4QuQiVGSBZaJz35V5mfm37V7QotSqYowrxa7ljZeEnI-RQjWRUTV8qjMdb5w8sps-WX286eIS9RF7Y_TOr4Cj6wSa_4UIfjh8GwzQPfWOV6nz8EIIIEfX-3ciBnc11jpF14E5BBpRzAqtiV8gdANBiKr; BIGipServerpool_passport=267190794.50215.0000; route=495c805987d0f5c8c84b14f60212447d; _jc_save_toDate=2020-02-20; _jc_save_wfdc_flag=dc; _jc_save_fromDate=2020-02-20; BIGipServerotn=451936778.24610.0000; _jc_save_fromStation=%u5317%u4EAC%2CBJP; _jc_save_toStation=%u4E4C%u9C81%u6728%u9F50%2CWAR'
         }
         self.cookie_jar = http.cookiejar.CookieJar()
         self.cookie_handler = urllib.request.HTTPCookieProcessor(self.cookie_jar)
@@ -125,7 +125,136 @@ class get_ticket_station_info:
         self.response_url_train = urllib.request.urlopen(self.add_url_headers_train_info)
         self.statude_code=self.response_url_train.getcode()
         self.train_info = self.response_url_train.read().decode("utf-8")
-        print(self.train_info, self.train_info_url_compleat, self.statude_code)
+        self.train_info_dict=json.loads(self.train_info)
+        self.train_code_list=[]
+        self.train_start_station_list=[]
+        self.train_end_station_list=[]
+        self.peo_want_start_station_list=[]
+        self.peo_want_end_station_list=[]
+        self.train_start_time_list=[]
+        self.train_end_time_list=[]
+        self.pass_time_list=[]
+        self.ticket_can_get_Y_N=[]
+        for all_train_info in self.train_info_dict["data"]["result"]:
+            self.train_code=""
+            self.count_5=0
+            for symbol_index_2 in range(len(all_train_info)):
+                if all_train_info[symbol_index_2]=="|":
+                    self.count_5+=1
+                if self.count_5==3:
+                    self.train_code+=all_train_info[symbol_index_2+1]
+                    if self.count_5==4:
+                        break
+            self.train_code_list.append(self.train_code.rstrip("|"))
+        for all_train_info in self.train_info_dict["data"]["result"]:
+            self.train_start_station=""
+            self.count_6=0
+            for symbol_index_3 in range(len(all_train_info)):
+                if all_train_info[symbol_index_3]=="|":
+                    self.count_6+=1
+                if self.count_6==4:
+                    self.train_start_station+=all_train_info[symbol_index_3+1]
+                    if self.count_6==5:
+                        break
+            self.train_start_station_list.append(self.train_start_station.rstrip("|"))
+        for all_train_info in self.train_info_dict["data"]["result"]:
+            self.train_end_station=""
+            self.count_7=0
+            for symbol_index_4 in range(len(all_train_info)):
+                if all_train_info[symbol_index_4]=="|":
+                    self.count_7+=1
+                if self.count_7==5:
+                    self.train_end_station+=all_train_info[symbol_index_4+1]
+                    if self.count_7==6:
+                        break
+            self.train_end_station_list.append(self.train_end_station.rstrip("|"))
+        for all_train_info in self.train_info_dict["data"]["result"]:
+            self.peo_want_start_station=""
+            self.count_8=0
+            for symbol_index_5 in range(len(all_train_info)):
+                if all_train_info[symbol_index_5]=="|":
+                    self.count_8+=1
+                if self.count_8==6:
+                    self.peo_want_start_station+=all_train_info[symbol_index_5+1]
+                    if self.count_8==7:
+                        break
+            self.peo_want_start_station_list.append(self.peo_want_start_station.rstrip("|"))
+        for all_train_info in self.train_info_dict["data"]["result"]:
+            self.peo_want_end_station=""
+            self.count_9=0
+            for symbol_index_6 in range(len(all_train_info)):
+                if all_train_info[symbol_index_6]=="|":
+                    self.count_9+=1
+                if self.count_9==7:
+                    self.peo_want_end_station+=all_train_info[symbol_index_6+1]
+                    if self.count_9==8:
+                        break
+            self.peo_want_end_station_list.append(self.peo_want_end_station.rstrip("|"))
+        for all_train_info in self.train_info_dict["data"]["result"]:
+            self.train_start_time=""
+            self.count_10=0
+            for symbol_index_7 in range(len(all_train_info)):
+                if all_train_info[symbol_index_7]=="|":
+                    self.count_10+=1
+                if self.count_10==8:
+                    self.train_start_time+=all_train_info[symbol_index_7+1]
+                    if self.count_10==9:
+                        break
+            self.train_start_time_list.append(self.train_start_time.rstrip("|"))
+        for all_train_info in self.train_info_dict["data"]["result"]:
+            self.train_end_time=""
+            self.count_11=0
+            for symbol_index_8 in range(len(all_train_info)):
+                if all_train_info[symbol_index_8]=="|":
+                    self.count_11+=1
+                if self.count_11==9:
+                    self.train_end_time+=all_train_info[symbol_index_8+1]
+                    if self.count_11==10:
+                        break
+            self.train_end_time_list.append(self.train_end_time.rstrip("|"))
+        for all_train_info in self.train_info_dict["data"]["result"]:
+            self.pass_time=""
+            self.count_12=0
+            for symbol_index_9 in range(len(all_train_info)):
+                if all_train_info[symbol_index_9]=="|":
+                    self.count_12+=1
+                if self.count_12==10:
+                    self.pass_time+=all_train_info[symbol_index_9+1]
+                    if self.count_12==11:
+                        break
+            self.pass_time_list.append(self.pass_time.rstrip("|"))
+        for all_train_info in self.train_info_dict["data"]["result"]:
+            self.Y_N=""
+            self.ticket_Y_N=None
+            self.count_13=0
+            for symbol_index_10 in range(len(all_train_info)):
+                if all_train_info[symbol_index_10]=="|":
+                    self.count_13+=1
+                if self.count_13==11:
+                    self.Y_N+=all_train_info[symbol_index_10+1]
+                    if self.count_13==12:
+                        break
+            self.Y_N_after=self.Y_N.rstrip("|")
+            if self.Y_N_after=="Y":
+                self.ticket_Y_N="允许继续购票"
+            elif self.Y_N_after=="N":
+                self.ticket_Y_N="票已售罄，无法购票"
+            self.ticket_can_get_Y_N.append(self.ticket_Y_N)
+        for all_info_index in range(len(self.train_code_list)):
+            self.train_info_dict = []
+            self.every_train_info={}
+            self.train_info_dict.append(self.train_start_station_list[all_info_index])
+            self.train_info_dict.append(self.train_end_station_list[all_info_index])
+            self.train_info_dict.append(self.peo_want_start_station_list[all_info_index])
+            self.train_info_dict.append(self.peo_want_end_station_list[all_info_index])
+            self.train_info_dict.append(self.train_start_time_list[all_info_index])
+            self.train_info_dict.append(self.train_end_time_list[all_info_index])
+            self.train_info_dict.append(self.pass_time_list[all_info_index])
+            self.train_info_dict.append(self.ticket_can_get_Y_N[all_info_index])
+            self.every_train_info[self.train_code_list[all_info_index]]=self.train_info_dict
+            self.ticket_all_info_dict.append(self.every_train_info)
+        with open(r".\temp\all_TrainStation_info.json", "w", encoding="utf-8") as train_info_json:
+            train_info_json.write(json.dumps(self.ticket_all_info_dict, ensure_ascii=False))
 
 
 
