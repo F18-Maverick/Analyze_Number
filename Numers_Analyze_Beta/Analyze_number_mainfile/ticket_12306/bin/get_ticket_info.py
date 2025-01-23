@@ -1,4 +1,5 @@
 import os
+import ssl
 import json
 import tkinter
 import http.cookiejar
@@ -6,6 +7,7 @@ import urllib.request
 import tkinter.messagebox
 class get_ticket_station_info:
     def __init__(self):
+        self.constant=ssl.create_default_context(cafile=r".\ticket_12306_prog_addition\cacert.pem")
         self.ticket_all_info_dict=[]
         self.station_start_symbol=None
         self.station_end_symbol=None
@@ -49,7 +51,7 @@ class get_ticket_station_info:
         self.train_info_url=\
             "https://kyfw.12306.cn/otn/leftTicket/queryO?leftTicketDTO.train_date={}&leftTicketDTO.from_station={}&leftTicketDTO.to_station={}&purpose_codes={}"
         self.add_url_headers = urllib.request.Request(url=self.station_name_url, headers=self.header)
-        self.response_url=urllib.request.urlopen(self.add_url_headers)
+        self.response_url=urllib.request.urlopen(self.add_url_headers, context=self.constant)
         self.station_name_info=self.response_url.read().decode("utf-8")
         self.count=0
         self.count_1 = []
@@ -122,7 +124,7 @@ class get_ticket_station_info:
             self.station_end_symbol=self.station_info_dict[self.end_city].upper()
         self.train_info_url_compleat=self.train_info_url.format(self.date_start, self.station_start_symbol, self.station_end_symbol, "ADULT")
         self.add_url_headers_train_info = urllib.request.Request(url=self.train_info_url_compleat, headers=self.header)
-        self.response_url_train = urllib.request.urlopen(self.add_url_headers_train_info)
+        self.response_url_train = urllib.request.urlopen(self.add_url_headers_train_info, context=self.constant)
         self.statude_code=self.response_url_train.getcode()
         self.train_info = self.response_url_train.read().decode("utf-8")
         self.train_info_dict=json.loads(self.train_info)
@@ -136,8 +138,25 @@ class get_ticket_station_info:
         self.pass_time_list=[]
         self.ticket_can_get_Y_N=[]
         for all_train_info in self.train_info_dict["data"]["result"]:
+            self.count_5 = 0
+            self.count_6 = 0
+            self.count_7 = 0
+            self.count_8 = 0
+            self.count_9 = 0
+            self.count_10 = 0
+            self.count_11 = 0
+            self.count_12 = 0
+            self.count_13 = 0
             self.train_code=""
-            self.count_5=0
+            self.train_start_station=""
+            self.train_end_station=""
+            self.peo_want_start_station=""
+            self.peo_want_end_station=""
+            self.train_start_time=""
+            self.train_end_time=""
+            self.pass_time=""
+            self.Y_N=""
+            self.ticket_Y_N=None
             for symbol_index_2 in range(len(all_train_info)):
                 if all_train_info[symbol_index_2]=="|":
                     self.count_5+=1
@@ -146,9 +165,6 @@ class get_ticket_station_info:
                     if self.count_5==4:
                         break
             self.train_code_list.append(self.train_code.rstrip("|"))
-        for all_train_info in self.train_info_dict["data"]["result"]:
-            self.train_start_station=""
-            self.count_6=0
             for symbol_index_3 in range(len(all_train_info)):
                 if all_train_info[symbol_index_3]=="|":
                     self.count_6+=1
@@ -157,9 +173,6 @@ class get_ticket_station_info:
                     if self.count_6==5:
                         break
             self.train_start_station_list.append(self.train_start_station.rstrip("|"))
-        for all_train_info in self.train_info_dict["data"]["result"]:
-            self.train_end_station=""
-            self.count_7=0
             for symbol_index_4 in range(len(all_train_info)):
                 if all_train_info[symbol_index_4]=="|":
                     self.count_7+=1
@@ -168,9 +181,6 @@ class get_ticket_station_info:
                     if self.count_7==6:
                         break
             self.train_end_station_list.append(self.train_end_station.rstrip("|"))
-        for all_train_info in self.train_info_dict["data"]["result"]:
-            self.peo_want_start_station=""
-            self.count_8=0
             for symbol_index_5 in range(len(all_train_info)):
                 if all_train_info[symbol_index_5]=="|":
                     self.count_8+=1
@@ -179,9 +189,6 @@ class get_ticket_station_info:
                     if self.count_8==7:
                         break
             self.peo_want_start_station_list.append(self.peo_want_start_station.rstrip("|"))
-        for all_train_info in self.train_info_dict["data"]["result"]:
-            self.peo_want_end_station=""
-            self.count_9=0
             for symbol_index_6 in range(len(all_train_info)):
                 if all_train_info[symbol_index_6]=="|":
                     self.count_9+=1
@@ -190,9 +197,6 @@ class get_ticket_station_info:
                     if self.count_9==8:
                         break
             self.peo_want_end_station_list.append(self.peo_want_end_station.rstrip("|"))
-        for all_train_info in self.train_info_dict["data"]["result"]:
-            self.train_start_time=""
-            self.count_10=0
             for symbol_index_7 in range(len(all_train_info)):
                 if all_train_info[symbol_index_7]=="|":
                     self.count_10+=1
@@ -201,9 +205,6 @@ class get_ticket_station_info:
                     if self.count_10==9:
                         break
             self.train_start_time_list.append(self.train_start_time.rstrip("|"))
-        for all_train_info in self.train_info_dict["data"]["result"]:
-            self.train_end_time=""
-            self.count_11=0
             for symbol_index_8 in range(len(all_train_info)):
                 if all_train_info[symbol_index_8]=="|":
                     self.count_11+=1
@@ -212,9 +213,6 @@ class get_ticket_station_info:
                     if self.count_11==10:
                         break
             self.train_end_time_list.append(self.train_end_time.rstrip("|"))
-        for all_train_info in self.train_info_dict["data"]["result"]:
-            self.pass_time=""
-            self.count_12=0
             for symbol_index_9 in range(len(all_train_info)):
                 if all_train_info[symbol_index_9]=="|":
                     self.count_12+=1
@@ -223,10 +221,6 @@ class get_ticket_station_info:
                     if self.count_12==11:
                         break
             self.pass_time_list.append(self.pass_time.rstrip("|"))
-        for all_train_info in self.train_info_dict["data"]["result"]:
-            self.Y_N=""
-            self.ticket_Y_N=None
-            self.count_13=0
             for symbol_index_10 in range(len(all_train_info)):
                 if all_train_info[symbol_index_10]=="|":
                     self.count_13+=1
@@ -255,6 +249,7 @@ class get_ticket_station_info:
             self.ticket_all_info_dict.append(self.every_train_info)
         with open(r".\temp\all_TrainStation_info.json", "w", encoding="utf-8") as train_info_json:
             train_info_json.write(json.dumps(self.ticket_all_info_dict, ensure_ascii=False))
+        print("done!!!")
 
 
 
