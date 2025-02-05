@@ -15,8 +15,8 @@ class Get_ticket_interface:
         self.progress_windows = None
         self.computer_info_height = self.Windows.winfo_screenheight()
         self.computer_info_width = self.Windows.winfo_screenwidth()
-        self.screen_x = int((self.computer_info_width - 1000) / 2)
-        self.screen_y = int((self.computer_info_height - 600) / 2)
+        self.screen_x = int((self.computer_info_width-self.Windows_width) / 2)
+        self.screen_y = int((self.computer_info_height-self.Windows_height) / 2)
         self.size_position_str = "{}x{}+{}+{}".format(
             self.Windows_width, self.Windows_height, self.screen_x, self.screen_y)
         self.New_Windows = self.Windows.geometry(self.size_position_str)
@@ -70,7 +70,8 @@ class Get_ticket_interface:
                 datalog_write_1.write(self.end_station)
             with open(os.path.join(self.temp_dir, "data_socket_start_date.log"), "w", encoding="utf-8") as datalog_write_2:
                 datalog_write_2.write(self.date)
-        self.get_ticket_info_func=thread_all().download_ticket_station_info_thread()
+        self.get_ticket_info_func=thread_all().download_ticket_station_info_thread(
+            self.computer_info_height, self.computer_info_width)
         self.entery_start.delete(0, tkinter.END)
         self.entery_end.delete(0, tkinter.END)
         self.entery_date.delete(0, tkinter.END)

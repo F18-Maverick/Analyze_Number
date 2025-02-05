@@ -2,11 +2,15 @@ import os
 import ssl
 import json
 import tkinter
+import threading
 import http.cookiejar
 import urllib.request
 import tkinter.messagebox
+from .train_info_interface import train_ticket_choose_UI
 class get_ticket_station_info:
-    def __init__(self):
+    def __init__(self, main_window_height, main_window_width):
+        self.main_window_height=main_window_height
+        self.main_window_width=main_window_width
         self.constant=ssl.create_default_context(cafile=r".\ticket_12306_prog_addition\cacert.pem")
         self.ticket_all_info_dict=[]
         self.station_start_symbol=None
@@ -249,7 +253,9 @@ class get_ticket_station_info:
             self.ticket_all_info_dict.append(self.every_train_info)
         with open(r".\temp\all_TrainStation_info.json", "w", encoding="utf-8") as train_info_json:
             train_info_json.write(json.dumps(self.ticket_all_info_dict, ensure_ascii=False))
-        print("done!!!")
+        self.ticket_choose_interface_thread=threading.Thread(
+            target=train_ticket_choose_UI, args=(self.ticket_all_info_dict, self.main_window_height, self.main_window_width), name="thread5", daemon=True)
+        self.ticket_choose_interface_thread_start=self.ticket_choose_interface_thread.start()
 
 
 

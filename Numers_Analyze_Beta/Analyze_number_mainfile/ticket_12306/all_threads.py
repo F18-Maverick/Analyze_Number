@@ -16,9 +16,10 @@ class thread_all:
         self.thread_choose_UI=threading.Thread(target=choose_start_time, args=(computer_width, computer_height),
                                                name="thread3", daemon=True)
         self.thread_choose_UI_date=self.thread_choose_UI.start()
-    def download_ticket_station_info_thread(self):
+    def download_ticket_station_info_thread(self, computer_width, computer_height):
         self.thread_station_info=threading.Thread(
-            target=get_ticket_info.get_ticket_station_info, name="thread4", daemon=True)
+            target=get_ticket_info.get_ticket_station_info, args=(computer_height, computer_width),
+            name="thread4", daemon=True)
         self.thread_station_name=self.thread_station_info.start()
 
 
