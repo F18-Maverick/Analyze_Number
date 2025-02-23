@@ -5,13 +5,15 @@ class train_ticket_choose_UI:
     def __init__(self, train_info, main_window_height, main_window_width):
         self.text_font=font.Font(family="微软雅黑", size=10)
         self.sapce_length=self.text_font.measure(" ")
+        self.text_info = self.text_font.metrics()
+        self.text_height = self.text_info["ascent"] + self.text_info["descent"]
         with open(r".\temp\station_name_info.json", "r", encoding="utf-8") as station_name:
             self.station_name_info=station_name.read()
         self.train_ticket_UI=tkinter.Toplevel()
         self.interface_width=1000
         self.interface_height=800
-        self.ListBox_width=self.interface_width-10
-        self.ListBox_height=self.interface_height-10
+        self.ListBox_width=self.interface_width
+        self.ListBox_height=self.interface_height
         self.every_lettice_length=self.ListBox_width/6
         self.screen_choose_ticket_x = int((main_window_width - self.interface_width)/2)
         self.screen_choose_ticket_y = int((main_window_height - self.interface_height)/2)
