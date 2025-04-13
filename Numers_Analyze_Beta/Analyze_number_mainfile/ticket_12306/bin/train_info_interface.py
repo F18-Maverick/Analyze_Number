@@ -13,7 +13,7 @@ class train_ticket_choose_UI:
         self.interface_width=1000
         self.interface_height=800
         self.ListBox_width=self.interface_width
-        self.ListBox_height=self.interface_height
+        self.ListBox_height=int(self.interface_height/self.text_height+1)
         self.every_lettice_length=self.ListBox_width/6
         self.screen_choose_ticket_x = int((main_window_width - self.interface_width)/2)
         self.screen_choose_ticket_y = int((main_window_height - self.interface_height)/2)
@@ -56,8 +56,19 @@ class train_ticket_choose_UI:
                 self.train_number, " "*self.space_length_1, self.complete_peorid_station, " "*self.space_length_2, self.left_ticket_info,
                 " "*self.space_length_3, self.choose_peorid_station, " "*self.space_length_4, self.choose_time_peorid, " "*self.space_length_5, self.need_time)
             self.train_ticket_list.insert(tkinter.END, self.train_info)
-        self.train_ticket_list.pack(side=tkinter.LEFT)
+        self.train_ticket_list.pack(side=tkinter.BOTTOM)
         self.scrollbar.config(command=self.train_ticket_list.yview)
+        self.title_list=["车次", "列车始发/终点站", "余票情况", "选择的始发/终点站", "列车始发/终到时间", "中途耗时"]
+        self.space_num_list=[]
+        self.title_each_length=self.interface_width/6
+        for titles in self.title_list:
+            self.space_length=int((self.title_each_length-self.text_font.measure(titles))/self.sapce_length)
+            self.space_num_list.append(self.space_length)
+        self.title_complete="{}{}{}{}{}{}{}{}{}{}{}{}".format(
+            self.title_list[0], self.space_num_list[0]*" ", self.title_list[1], self.space_num_list[1]*" ", self.title_list[2], self.space_num_list[2]*" ",
+            self.title_list[3], self.space_num_list[3]*" ", self.title_list[4], self.space_num_list[4]*" ", self.title_list[5], self.space_num_list[5]*" ")
+        self.title_label=tkinter.Label(self.train_ticket_UI, text=self.title_complete, font=self.text_font)
+        self.title_label.pack(side=tkinter.TOP)
     def button_each_ticket(self):
         pass
 
