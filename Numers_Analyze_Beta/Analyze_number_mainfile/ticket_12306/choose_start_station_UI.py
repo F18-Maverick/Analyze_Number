@@ -13,8 +13,8 @@ class choose_start_station:
         self.all_city_station_ID=all_city_station().get_station_Id()
         self.all_city_station_pycode=all_city_station().get_station_py_code()
         self.windows_choose_start_station = tkinter.Toplevel()
-        self.windows_choose_start_station_icon = self.windows_choose_start_station.iconbitmap(
-            r"./ticket_12306_prog_addition/download_photo.ico")
+        # self.windows_choose_start_station_icon = self.windows_choose_start_station.iconbitmap(
+        #     r"./ticket_12306_prog_addition/download_photo.ico")
         self.start_station_entery = tkinter.Entry(
             self.windows_choose_start_station, background="#FFFFFF", foreground="#4B0082",
             selectbackground="#FFFF00", selectforeground="#DC143C", font=("宋体", 15, "underline"),

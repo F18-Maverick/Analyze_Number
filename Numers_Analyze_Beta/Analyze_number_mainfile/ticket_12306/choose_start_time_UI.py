@@ -10,8 +10,8 @@ class choose_start_time:
         self.date_local = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         self.date_local_label = tkinter.Label(self.windows_choose_start_time, text="现在是:{}".format(self.date_local))
         self.data_local_date_pack=self.date_local_label.place(x=self.windows_width/2, y=self.y_entry+90)
-        self.windows_choose_start_time_icon = self.windows_choose_start_time.iconbitmap(
-            r"./ticket_12306_prog_addition/download_photo.ico")
+        # self.windows_choose_start_time_icon = self.windows_choose_start_time.iconbitmap(
+        #     r"./ticket_12306_prog_addition/download_photo.ico")
         self.title_1 = self.windows_choose_start_time.title("请选择日期和时间")
         self.windows_choose_start_time_height = 300
         self.windows_choose_start_time_width = 500

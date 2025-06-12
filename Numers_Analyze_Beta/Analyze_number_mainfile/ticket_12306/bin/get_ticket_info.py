@@ -11,7 +11,7 @@ class get_ticket_station_info:
     def __init__(self, main_window_height, main_window_width):
         self.main_window_height=main_window_height
         self.main_window_width=main_window_width
-        self.constant=ssl.create_default_context(cafile=r".\ticket_12306_prog_addition\cacert.pem")
+        self.constant=ssl.create_default_context(cafile=r"./ticket_12306_prog_addition/cacert.pem")
         self.ticket_all_info_dict=[]
         self.station_start_symbol=None
         self.station_end_symbol=None
@@ -233,10 +233,12 @@ class get_ticket_station_info:
                     if self.count_13==12:
                         break
             self.Y_N_after=self.Y_N.rstrip("|")
-            if self.Y_N_after=="Y":
+            if str(self.Y_N_after)=="Y":
                 self.ticket_Y_N="允许继续购票"
-            elif self.Y_N_after=="N":
+            elif str(self.Y_N_after)=="N":
                 self.ticket_Y_N="票已售罄，无法购票"
+            else:
+                self.ticket_Y_N="该票未起售"
             self.ticket_can_get_Y_N.append(self.ticket_Y_N)
         for all_info_index in range(len(self.train_code_list)):
             self.train_info_dict = []
@@ -251,10 +253,11 @@ class get_ticket_station_info:
             self.train_info_dict.append(self.ticket_can_get_Y_N[all_info_index])
             self.every_train_info[self.train_code_list[all_info_index]]=self.train_info_dict
             self.ticket_all_info_dict.append(self.every_train_info)
-        with open(r".\temp\all_TrainStation_info.json", "w", encoding="utf-8") as train_info_json:
+        with open(r"./temp/all_TrainStation_info.json", "w", encoding="utf-8") as train_info_json:
             train_info_json.write(json.dumps(self.ticket_all_info_dict, ensure_ascii=False))
         self.ticket_choose_interface_thread=threading.Thread(
-            target=train_ticket_choose_UI, args=(self.ticket_all_info_dict, self.main_window_height, self.main_window_width), name="thread5", daemon=True)
+            target=train_ticket_choose_UI, args=(self.ticket_all_info_dict, self.main_window_height, self.main_window_width, self.date_start),
+            name="thread5", daemon=True)
         self.ticket_choose_interface_thread_start=self.ticket_choose_interface_thread.start()
 
 

@@ -20,8 +20,7 @@ class Get_ticket_interface:
         self.size_position_str = "{}x{}+{}+{}".format(
             self.Windows_width, self.Windows_height, self.screen_x, self.screen_y)
         self.New_Windows = self.Windows.geometry(self.size_position_str)
-        self.windows_icon = self.Windows.iconbitmap(r"./ticket_12306_prog_addition/download_photo.ico")
-        self.entery_start=None
+        #self.windows_icon = self.Windows.iconbitmap(r"./ticket_12306_prog_addition/download_photo.ico")
         self.label_start=tkinter.Label(self.Windows, text="出发城市/车站:", font=("微软雅黑", 12))
         self.label_start_pack=self.label_start.pack(side="top", pady=20)
         self.label_end = tkinter.Label(self.Windows, text="到达城市/车站:", font=("微软雅黑", 12))
