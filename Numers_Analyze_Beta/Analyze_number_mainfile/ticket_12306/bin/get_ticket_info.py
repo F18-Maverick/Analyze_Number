@@ -9,9 +9,22 @@ import tkinter.messagebox
 from .train_info_interface import train_ticket_choose_UI
 class get_ticket_station_info:
     def __init__(self, main_window_height, main_window_width):
+        self.dir_bar_list = []
+        self.dir_bar = ""
+        self.current_dir_this_file = os.path.dirname(os.path.abspath(__file__))
+        for i in range(len(self.current_dir_this_file)):
+            self.dir_bar += self.current_dir_this_file[i]
+            if self.current_dir_this_file[i] == "/" or self.current_dir_this_file[i] == "\\":
+                self.dir_bar_list.append(self.dir_bar)
+                self.dir_bar = ""
+        self.current_dir_this_file = ""
+        for j in self.dir_bar_list:
+            self.current_dir_this_file += j
+        self.ssl_context_dir=os.path.join(self.current_dir_this_file, "ticket_12306_prog_addition", "cacert.pem")
+        self.temp_dir = os.path.join(self.current_dir_this_file, "temp")
         self.main_window_height=main_window_height
         self.main_window_width=main_window_width
-        self.constant=ssl.create_default_context(cafile=r"./ticket_12306_prog_addition/cacert.pem")
+        self.constant=ssl.create_default_context(cafile=self.ssl_context_dir)
         self.ticket_all_info_dict=[]
         self.station_start_symbol=None
         self.station_end_symbol=None
@@ -19,11 +32,10 @@ class get_ticket_station_info:
         self.start_city=None
         self.end_city=None
         self.date_start=None
-        self.temp_dir =os.path.abspath('./temp')
         if os.path.exists(self.temp_dir):
-            self.temp_dir_start=os.path.abspath("./temp/data_socket_start_station.log")
-            self.temp_dir_end=os.path.abspath("./temp/data_socket_end_station.log")
-            self.temp_dir_date=os.path.abspath("./temp/data_socket_start_date.log")
+            self.temp_dir_start = os.path.join(self.temp_dir, "data_socket_start_station.log")
+            self.temp_dir_end = os.path.join(self.temp_dir, "data_socket_end_station.log")
+            self.temp_dir_date = os.path.join(self.temp_dir, "data_socket_start_date.log")
             with open(self.temp_dir_start, "r", encoding="utf-8") as read_start:
                 self.read_condition_start=read_start.read()
             with open(self.temp_dir_end, "r", encoding="utf-8") as read_end:
@@ -108,11 +120,11 @@ class get_ticket_station_info:
             os.makedirs(self.temp_dir)
         with open(os.path.join(self.temp_dir, "station_name_info.json"), "w", encoding="utf-8") as datalog_write:
             json.dump(self.station_info_dict, datalog_write, indent=4, ensure_ascii=False)
-        with open(r"./temp/data_socket_start_station.log", "r", encoding="utf-8") as datalog_city_start_read:
+        with open(self.temp_dir_start, "r", encoding="utf-8") as datalog_city_start_read:
             self.start_city=datalog_city_start_read.read()
-        with open(r"./temp/data_socket_end_station.log", "r", encoding="utf-8") as datalog_city_end_read:
+        with open(self.temp_dir_end, "r", encoding="utf-8") as datalog_city_end_read:
             self.end_city=datalog_city_end_read.read()
-        with open(r"./temp/data_socket_start_date.log", "r", encoding="utf-8") as datalog_city_start_date_read:
+        with open(self.temp_dir_date, "r", encoding="utf-8") as datalog_city_start_date_read:
             self.date_start = datalog_city_start_date_read.read()
         if self.start_city not in self.station_info_dict:
             self.error_box = tkinter.messagebox.showerror(
@@ -253,7 +265,7 @@ class get_ticket_station_info:
             self.train_info_dict.append(self.ticket_can_get_Y_N[all_info_index])
             self.every_train_info[self.train_code_list[all_info_index]]=self.train_info_dict
             self.ticket_all_info_dict.append(self.every_train_info)
-        with open(r"./temp/all_TrainStation_info.json", "w", encoding="utf-8") as train_info_json:
+        with open(os.path.join(self.temp_dir, "all_TrainStation_info.json"), "w", encoding="utf-8") as train_info_json:
             train_info_json.write(json.dumps(self.ticket_all_info_dict, ensure_ascii=False))
         self.ticket_choose_interface_thread=threading.Thread(
             target=train_ticket_choose_UI, args=(self.ticket_all_info_dict, self.main_window_height, self.main_window_width, self.date_start),

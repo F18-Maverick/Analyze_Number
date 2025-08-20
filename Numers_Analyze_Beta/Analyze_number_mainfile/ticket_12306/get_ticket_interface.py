@@ -5,6 +5,8 @@ import tkinter.messagebox
 from all_threads import thread_all
 class Get_ticket_interface:
     def __init__(self):
+        self.file_dir_name=os.path.dirname(os.path.abspath(__file__))
+        self.temp_dir = os.path.join(self.file_dir_name, 'temp')
         self.entery_start=None
         self.entery_end=None
         self.entery_date=None
@@ -53,7 +55,6 @@ class Get_ticket_interface:
         self.start_station=self.entery_start.get()
         self.end_station=self.entery_end.get()
         self.date=self.entery_date.get()
-        self.temp_dir = './temp'
         if not os.path.exists(self.temp_dir):
             os.makedirs(self.temp_dir)
             with open(os.path.join(self.temp_dir, "data_socket_start_station.log"), "w", encoding="utf-8") as datalog_write:
@@ -75,7 +76,6 @@ class Get_ticket_interface:
         self.entery_end.delete(0, tkinter.END)
         self.entery_date.delete(0, tkinter.END)
     def update_info(self):
-        self.temp_dir = './temp'
         if not os.path.exists(self.temp_dir):
             self.error_box = tkinter.messagebox.showerror(
                 title="未找到文件",

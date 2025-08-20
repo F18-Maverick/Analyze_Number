@@ -3,6 +3,8 @@ import time
 import tkinter
 class choose_start_time:
     def __init__(self, computer_info_width, computer_info_height):
+        self.file_dir_name = os.path.dirname(os.path.abspath(__file__))
+        self.temp_dir = os.path.join(self.file_dir_name, 'temp')
         self.x_entry = 50
         self.y_entry = 80 / 3
         self.windows_choose_start_time = tkinter.Toplevel()
@@ -57,7 +59,6 @@ class choose_start_time:
             self.get_result="{}-0{}-{}".format(self.years, self.months, self.days)
         elif len(self.days)<2 and len(self.months)<2:
             self.get_result="{}-0{}-0{}".format(self.years, self.months, self.days)
-        self.temp_dir = './temp'
         if not os.path.exists(self.temp_dir):
             os.makedirs(self.temp_dir)
         with open(os.path.join(self.temp_dir, "data_socket_start_date.log"), "w", encoding="utf-8") as datalog_write:

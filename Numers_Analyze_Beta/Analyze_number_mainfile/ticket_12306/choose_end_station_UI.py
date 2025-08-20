@@ -4,6 +4,8 @@ from analyze_json.analyze_city_json import all_city
 from analyze_json.analyze_city_station_json import all_city_station
 class choose_end_station:
     def __init__(self, computer_info_width, computer_info_height):
+        self.file_dir_name = os.path.dirname(os.path.abspath(__file__))
+        self.temp_dir = os.path.join(self.file_dir_name, 'temp')
         self.all_city_name=all_city().get_city_name()
         self.all_city_adCode=all_city().get_city_adCode()
         self.all_city_code=all_city().get_city_code()
@@ -48,7 +50,6 @@ class choose_end_station:
                 self.pack = self.label.pack(pady=30)
     def sure_button_operate(self):
         self.get_text_res = self.end_station_entery.get()
-        self.temp_dir = './temp'
         if not os.path.exists(self.temp_dir):
             os.makedirs(self.temp_dir)
         with open(os.path.join(self.temp_dir, "data_socket_end_station.log"), "w", encoding="utf-8") as datalog_write:

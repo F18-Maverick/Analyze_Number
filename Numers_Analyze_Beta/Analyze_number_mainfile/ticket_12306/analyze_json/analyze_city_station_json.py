@@ -2,8 +2,18 @@ import os
 import json
 class all_city_station:
     def __init__(self):
+        self.dir_bar_list = []
+        self.dir_bar = ""
         self.current_dir_this_file = os.path.dirname(os.path.abspath(__file__))
-        self.city_station_json_path = os.path.join(self.current_dir_this_file, '..', 'ticket_12306_prog_addition', 'cityTrain.json')
+        for i in range(len(self.current_dir_this_file)):
+            self.dir_bar += self.current_dir_this_file[i]
+            if self.current_dir_this_file[i] == "/" or self.current_dir_this_file[i] == "\\":
+                self.dir_bar_list.append(self.dir_bar)
+                self.dir_bar = ""
+        self.current_dir_this_file = ""
+        for j in self.dir_bar_list:
+            self.current_dir_this_file += j
+        self.city_station_json_path = os.path.join(self.current_dir_this_file, 'ticket_12306_prog_addition', 'cityTrain.json')
         self.city_data=None
         with open(self.city_station_json_path, 'r', encoding="utf-8") as self.city_station_json_file:
             self.city_data = json.load(self.city_station_json_file)

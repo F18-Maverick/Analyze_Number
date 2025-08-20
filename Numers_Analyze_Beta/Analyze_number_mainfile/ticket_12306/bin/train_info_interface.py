@@ -1,3 +1,4 @@
+import os
 import json
 import tkinter
 import threading
@@ -6,6 +7,19 @@ import tkinter.messagebox
 from .get_train_code_ticket import get_ticket
 class train_ticket_choose_UI:
     def __init__(self, train_info, main_window_height, main_window_width, train_date):
+        self.dir_bar_list = []
+        self.dir_bar = ""
+        self.current_dir_this_file = os.path.dirname(os.path.abspath(__file__))
+        for i in range(len(self.current_dir_this_file)):
+            self.dir_bar += self.current_dir_this_file[i]
+            if self.current_dir_this_file[i] == "/" or self.current_dir_this_file[i] == "\\":
+                self.dir_bar_list.append(self.dir_bar)
+                self.dir_bar = ""
+        self.current_dir_this_file = ""
+        for j in self.dir_bar_list:
+            self.current_dir_this_file += j
+        self.station_name_dir=os.path.join(self.current_dir_this_file, "temp", "station_name_info.json")
+        self.train_code_dir=os.path.join(self.current_dir_this_file, "temp", "data_socket_train_code.log")
         self.train_index=0
         self.condition=None
         self.period_start_name = None
@@ -22,12 +36,12 @@ class train_ticket_choose_UI:
         self.sapce_length=self.text_font.measure(" ")
         self.text_info = self.text_font.metrics()
         self.text_height = self.text_info["ascent"] + self.text_info["descent"]
-        with open(r"./temp/station_name_info.json", "r", encoding="utf-8") as station_name:
+        with open(self.station_name_dir, "r", encoding="utf-8") as station_name:
             self.station_name_info=station_name.read()
         self.interface_width=1000
         self.interface_height=800
         self.ListBox_width = self.interface_width
-        self.ListBox_height = int(self.interface_height / self.text_height + 1) - 11
+        self.ListBox_height = int(self.interface_height / self.text_height)-1
         self.every_lettice_length = self.ListBox_width / 6
         self.screen_choose_ticket_x = int((main_window_width - self.interface_width) / 2)
         self.screen_choose_ticket_y = int((main_window_height - self.interface_height) / 2)
@@ -141,7 +155,7 @@ class train_ticket_choose_UI:
                         self.count_1+=1
                     else:
                         self.choose_train_ticket.append(i)
-                    with open(r"./temp/data_socket_train_code.log", "w", encoding="utf-8") as train_code:
+                    with open(self.train_code_dir, "w", encoding="utf-8") as train_code:
                         train_code.write(self.text_train_code)
                 else:
                     self.count += 1
