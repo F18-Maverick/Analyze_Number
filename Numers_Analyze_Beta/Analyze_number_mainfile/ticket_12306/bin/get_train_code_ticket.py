@@ -5,8 +5,6 @@ from selenium import webdriver
 from . import browsers_searcher
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 class get_ticket:
@@ -118,25 +116,38 @@ class get_ticket:
         print(self.choosed_driver_type_list, "...", self.choosed_driver_name_list, "...", self.choosed_browsers_dir_list, "...", self.browsers_dir_list)
         for index in range(len(self.choosed_driver_name_list)):
             self.driver_dir = os.path.join(self.abs_dir, "driver", self.choosed_driver_name_list[index])
-            self.options = Options()
-            # self.options.add_argument('--headless')
-            self.options.binary_location=self.browsers_dir_list[index]
             try:
-                if (self.choosed_driver_type_list[index]=="firefox" or self.choosed_driver_type_list[index]=="waterfox"
-                    or self.choosed_driver_type_list[index]=="firefox-developer"):
+                if (self.choosed_driver_type_list[index]=="firefox" or self.choosed_driver_type_list[index]=="waterfox" or
+                    self.choosed_driver_type_list[index]=="firefox-developer" or self.choosed_driver_type_list[index]=="firefox-nightly"):
+                    from selenium.webdriver.firefox.options import Options
+                    from selenium.webdriver.firefox.service import Service
+                    self.options = Options()
+                    # self.options.add_argument('--headless')
+                    self.options.binary_location = self.browsers_dir_list[index]
                     self.web_driver=Service(executable_path=self.driver_dir)
                     self.driver = webdriver.Firefox(service=self.web_driver, options=self.options)
                     self.contant=self.driver.get(self.init_url)
                     self.web_get_ticket()
                 elif (self.choosed_driver_type_list[index]=="msedge" or self.choosed_driver_type_list[index]=="msedge-dev"
                       or self.choosed_driver_type_list[index]=="msedge-beta" or self.choosed_driver_type_list[index]=="msedge-canary"):
+                    from selenium.webdriver.edge.options import Options
+                    from selenium.webdriver.edge.service import Service
+                    self.options = Options()
+                    # self.options.add_argument('--headless')
+                    self.options.binary_location = self.browsers_dir_list[index]
                     self.web_driver = Service(executable_path=self.driver_dir)
                     self.driver=webdriver.Edge(service=self.web_driver, options=self.options)
                     self.contant=self.driver.get(self.init_url)
                     self.web_get_ticket()
                 elif (self.choosed_driver_type_list[index]=="chrome" or self.choosed_driver_type_list[index]=="chrome-dev"
                       or self.choosed_driver_type_list[index]=="chromium" or self.choosed_driver_type_list[index]=="chrome-canary"
-                      or self.choosed_driver_type_list[index]=="ungoogled-chromium"):
+                      or self.choosed_driver_type_list[index]=="ungoogled-chromium" or self.choosed_driver_type_list[index]=="chrome-beta"
+                      or self.choosed_driver_type_list[index]=="chrome-test"):
+                    from selenium.webdriver.chrome.options import Options
+                    from selenium.webdriver.chrome.service import Service
+                    self.options = Options()
+                    # self.options.add_argument('--headless')
+                    self.options.binary_location = self.browsers_dir_list[index]
                     self.web_driver = Service(executable_path=self.driver_dir)
                     self.driver=webdriver.Chrome(service=self.web_driver, options=self.options)
                     self.contant=self.driver.get(self.init_url)
