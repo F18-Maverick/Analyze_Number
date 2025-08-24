@@ -154,9 +154,10 @@ class get_ticket:
                     self.web_get_ticket()
                 else:
                     tkinter.messagebox.showerror(title="Error", message="Error")
+                self.count += 1
             except:
                 pass
-            self.count+=1
+            break
         if self.count==len(self.choosed_driver_name_list):
             tkinter.messagebox.showerror(title="Error", message="无法使用任何浏览器，请提交issues至该项目的GitHub仓库")
         else:
