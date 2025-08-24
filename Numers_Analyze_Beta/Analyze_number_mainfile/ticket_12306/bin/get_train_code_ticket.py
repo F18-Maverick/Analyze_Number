@@ -87,6 +87,30 @@ class get_ticket:
                             tkinter.messagebox.showerror(
                                 title="不兼容",
                                 message="本项目未自带本机中浏览器的驱动程序。请阅读readme文件，并指定驱动和下载地址。如问题仍未解决，请发布issue")
+                    elif self.system_type=="darwin":
+                        if (self.choosed_driver_name=="firefox" or self.choosed_driver_name=="firefox-developer" or
+                            self.choosed_driver_name=="firefox-nightly"):
+                            self.choosed_driver_name = "geckodriver"
+                            self.choosed_driver_name_list.append(self.choosed_driver_name)
+                            self.choosed_driver_type_list.append(self.choosed_driver)
+                            self.choosed_browsers_dir_list.append(self.browser_dir)
+                        elif (self.choosed_driver_name=="msedge" or self.choosed_driver_name=="msedge-beta" or
+                              self.choosed_driver_name=="msedge-dev" or self.choosed_driver_name=="msedge-canary"):
+                            self.choosed_driver_name = "msedgedriver"
+                            self.choosed_driver_name_list.append(self.choosed_driver_name)
+                            self.choosed_driver_type_list.append(self.choosed_driver)
+                            self.choosed_browsers_dir_list.append(self.browser_dir)
+                        elif (self.choosed_driver=="chrome" or self.choosed_driver=="chrome-beta" or self.choosed_driver=="chrome-canary"
+                              or self.choosed_driver=="chrome-dev" or self.choosed_driver_name=="chrome-test" or
+                              self.choosed_driver_name=="chromium"):
+                            self.choosed_driver_name="chromedriver"
+                            self.choosed_driver_name_list.append(self.choosed_driver_name)
+                            self.choosed_driver_type_list.append(self.choosed_driver)
+                            self.choosed_browsers_dir_list.append(self.browser_dir)
+                        else:
+                            tkinter.messagebox.showerror(
+                                title="不兼容",
+                                message="本项目未自带本机中浏览器的驱动程序。请阅读readme文件，并指定驱动和下载地址。如问题仍未解决，请发布issue")
                     else:
                         tkinter.messagebox.showerror(
                             title="不兼容",
