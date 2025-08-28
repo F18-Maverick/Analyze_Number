@@ -10,9 +10,9 @@ from selenium.webdriver.support import expected_conditions as EC
 class get_ticket:
     def __init__(self, train_code, choose_start_station, choose_end_station, train_go_date, condition, choose_index_train):
         self.init_url = "https://kyfw.12306.cn/otn/leftTicket/init"
+        self.is_already_error=False
         self.button_xpath = None
         self.train_code_index = -1
-        self.onclick_condition = 0
         self.train_go_date = train_go_date
         self.train_code = train_code
         self.choose_start_station = choose_start_station
@@ -20,7 +20,6 @@ class get_ticket:
         self.condition = condition
         self.choose_index_train = choose_index_train
         self.open_browsers()
-        self.get_button()
     def open_browsers(self):
         self.count=0
         self.abs_dir = os.path.dirname(os.path.abspath(__file__))
@@ -169,13 +168,22 @@ class get_ticket:
         elif self.condition == "2":
             for index in range(self.choose_index_train[0] + 1):
                 self.train_code_index += 2
-        try:
-            self.button_xpath = (
-                "/html/body/div[2]/div[7]/div[13]/table/tbody/tr[{}]/td[13]/a".format(self.train_code_index))
-            self.onclick_condition+=1
-        except:
+        if self.is_already_error==False:
+            try:
+                self.button_xpath = (
+                    "/html/body/div[2]/div[7]/div[13]/table/tbody/tr[{}]/td[13]/a".format(self.train_code_index))
+                self.button_get_choose_ticket = WebDriverWait(self.driver, timeout=20).until(
+                    EC.element_to_be_clickable((By.XPATH, self.button_xpath)))
+                self.button_get_choose_ticket.click()
+            except:
+                self.is_already_error=True
+        else:
+            pass
+        if self.is_already_error==True:
             tkinter.messagebox.showerror(
                 title="Get ticket error", message="Can not get ticket correctly, please try share these bug in our github issues")
+        else:
+            pass
     def web_get_ticket(self):
         self.from_station_input = WebDriverWait(self.driver, timeout=20).until(
             EC.element_to_be_clickable((By.ID, "fromStationText")))
@@ -198,9 +206,8 @@ class get_ticket:
         self.button_get_left_ticket = WebDriverWait(self.driver, timeout=20).until(
             EC.element_to_be_clickable((By.ID, "query_ticket")))
         self.button_get_left_ticket.click()
-        self.button_get_choose_ticket = WebDriverWait(self.driver, timeout=20).until(
-            EC.element_to_be_clickable((By.XPATH, self.button_xpath)))
-        self.button_get_choose_ticket.click()
+        self.get_button()
+
 
 
 
