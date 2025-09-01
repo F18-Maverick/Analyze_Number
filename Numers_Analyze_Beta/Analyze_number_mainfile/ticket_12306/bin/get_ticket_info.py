@@ -268,7 +268,8 @@ class get_ticket_station_info:
         with open(os.path.join(self.temp_dir, "all_TrainStation_info.json"), "w", encoding="utf-8") as train_info_json:
             train_info_json.write(json.dumps(self.ticket_all_info_dict, ensure_ascii=False))
         self.ticket_choose_interface_thread=threading.Thread(
-            target=train_ticket_choose_UI, args=(self.ticket_all_info_dict, self.main_window_height, self.main_window_width, self.date_start),
+            target=train_ticket_choose_UI, args=(self.ticket_all_info_dict, self.main_window_height, self.main_window_width,
+                                                 self.date_start, self.start_city, self.end_city),
             name="thread5", daemon=True)
         self.ticket_choose_interface_thread_start=self.ticket_choose_interface_thread.start()
 

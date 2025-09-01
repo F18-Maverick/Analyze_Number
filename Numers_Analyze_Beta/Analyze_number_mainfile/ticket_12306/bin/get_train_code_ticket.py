@@ -8,7 +8,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 class get_ticket:
-    def __init__(self, train_code, choose_start_station, choose_end_station, train_go_date, condition, choose_index_train):
+    def __init__(self, train_code, choose_start_station, choose_end_station, period_start_station, period_end_station,
+                 train_go_date, condition, choose_index_train, train_start_time):
         self.init_url = "https://kyfw.12306.cn/otn/leftTicket/init"
         self.is_already_error=False
         self.button_xpath = None
@@ -17,8 +18,13 @@ class get_ticket:
         self.train_code = train_code
         self.choose_start_station = choose_start_station
         self.choose_end_station = choose_end_station
+        self.period_start_station=period_start_station
+        self.period_end_station=period_end_station
         self.condition = condition
         self.choose_index_train = choose_index_train
+        self.train_start_time=train_start_time
+        print(train_code, choose_start_station, choose_end_station, period_start_station, period_end_station,
+                 train_go_date, condition, choose_index_train, train_start_time)
         self.open_browsers()
     def open_browsers(self):
         self.count=0
@@ -178,10 +184,14 @@ class get_ticket:
             except:
                 self.is_already_error=True
         else:
+            tkinter.messagebox.showerror(
+                title="Get ticket error",
+                message="Can not get ticket correctly, please try share these bug in our github issues")
             pass
         if self.is_already_error==True:
             tkinter.messagebox.showerror(
-                title="Get ticket error", message="Can not get ticket correctly, please try share these bug in our github issues")
+                title="Get ticket error",
+                message="Can not get ticket correctly, please try share these bug in our github issues")
         else:
             pass
     def web_get_ticket(self):
