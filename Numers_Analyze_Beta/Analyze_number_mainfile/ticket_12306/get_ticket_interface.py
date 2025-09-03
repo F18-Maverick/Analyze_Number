@@ -76,7 +76,10 @@ class Get_ticket_interface:
         self.entery_end.delete(0, tkinter.END)
         self.entery_date.delete(0, tkinter.END)
     def update_info(self):
-        if not os.path.exists(self.temp_dir):
+        if (not os.path.exists(self.temp_dir) or
+            not os.path.exists(os.path.join(self.temp_dir, "data_socket_start_station.log")) or
+            not os.path.exists(os.path.join(self.temp_dir, "data_socket_end_station.log")) or
+            not os.path.exists(os.path.join(self.temp_dir, "data_socket_start_date.log"))):
             self.error_box = tkinter.messagebox.showerror(
                 title="未找到文件",
                 message="请填写购票信息(出发时间, 出发车站, 到达车站)")
