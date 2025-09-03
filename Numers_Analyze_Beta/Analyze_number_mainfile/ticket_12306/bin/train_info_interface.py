@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import tkinter
 import threading
@@ -45,6 +46,8 @@ class train_ticket_choose_UI:
         self.interface_height=800
         self.ListBox_width = self.interface_width
         self.ListBox_height = int(self.interface_height / self.text_height)-1
+        if sys.platform=="linux":
+            self.ListBox_height = int(self.interface_height / self.text_height) - 5
         self.every_lettice_length = self.ListBox_width / 6
         self.screen_choose_ticket_x = int((main_window_width - self.interface_width) / 2)
         self.screen_choose_ticket_y = int((main_window_height - self.interface_height) / 2)
