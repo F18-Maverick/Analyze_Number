@@ -125,10 +125,11 @@ class train_ticket_choose_UI:
             self.space_num_list[2]*" ", self.title_list[3], self.space_num_list[3]*" ", self.title_list[4], self.space_num_list[4]*" ",
             self.title_list[5], self.space_num_list[5]*" ", self.title_list[6], self.space_num_list[6]*" ")
     def get_ticket_thread(self):
+        print(self.train_code_list)
         self.ticket_choose_train_thread = threading.Thread(
             target=get_ticket, args=(self.text_train_code, self.choosed_start_station, self.choosed_end_station,
                                      self.period_start_name, self.period_end_name, self.train_go_date, self.condition,
-                                     self.choose_train_ticket, self.period_start_time), name="thread10", daemon=True)
+                                     self.choose_train_ticket, self.period_start_time, self.train_code_list), name="thread10", daemon=True)
         self.ticket_choose_train_thread_start = self.ticket_choose_train_thread.start()
     def get_enter_contant(self):
         self.count=0

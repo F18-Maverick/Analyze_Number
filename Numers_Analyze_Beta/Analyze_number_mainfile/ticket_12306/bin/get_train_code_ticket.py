@@ -9,10 +9,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 class get_ticket:
     def __init__(self, train_code, choose_start_station, choose_end_station, period_start_station, period_end_station,
-                 train_go_date, condition, choose_index_train, train_start_time):
+                 train_go_date, condition, choose_index_train, train_start_time, train_code_list):
         self.init_url = "https://kyfw.12306.cn/otn/leftTicket/init"
         self.is_already_error=False
         self.button_xpath = None
+        self.driver=None
         self.train_code_index = -1
         self.train_go_date = train_go_date
         self.train_code = train_code
@@ -23,8 +24,9 @@ class get_ticket:
         self.condition = condition
         self.choose_index_train = choose_index_train
         self.train_start_time=train_start_time
+        self.train_code_list=train_code_list
         print(train_code, choose_start_station, choose_end_station, period_start_station, period_end_station,
-                 train_go_date, condition, choose_index_train, train_start_time)
+              train_go_date, condition, choose_index_train, train_start_time, train_code_list)
         self.open_browsers()
     def open_browsers(self):
         self.count=0
@@ -167,15 +169,26 @@ class get_ticket:
             tkinter.messagebox.showerror(title="Error", message="无法使用任何浏览器，请提交issues至该项目的GitHub仓库")
         else:
             pass
-    def get_button(self):
+    def get_train_ticket_button(self):
+        self.select_info_list=None
         if self.condition == "1":
-            for index in range(self.train_code):
-                self.train_code_index += 2
+            # for index in range(self.train_code):
+            #     self.train_code_index += 2
+            self.select_info_list=[self.train_code_list[self.train_code-1], self.train_start_time,
+                                   self.period_start_station, self.period_end_station]
         elif self.condition == "2":
-            for index in range(self.choose_index_train[0] + 1):
-                self.train_code_index += 2
+            self.ticket_index=int(len(self.choose_index_train)/2)
+            self.select_info_list=[self.train_code, self.train_start_time[self.ticket_index],
+                                   self.period_start_station[self.ticket_index], self.period_end_station[self.ticket_index]]
+            # for index in range(self.choose_index_train[0] + 1):
+            #     self.train_code_index += 2
+        print(self.select_info_list)
         if self.is_already_error==False:
             try:
+                self.ticket_labels=self.driver.find_elements(
+                    By.XPATH, '/html/body/div[2]/div[7]/div[13]/table/tbody/tr[4]')
+                # '//tbody[@id="queryLeftTable"]/tr[@datatran="{}"]'.format(str(self.select_info_list[0]))
+                print(self.ticket_labels)
                 self.button_xpath = (
                     "/html/body/div[2]/div[7]/div[13]/table/tbody/tr[{}]/td[13]/a".format(self.train_code_index))
                 self.button_get_choose_ticket = WebDriverWait(self.driver, timeout=20).until(
@@ -216,7 +229,7 @@ class get_ticket:
         self.button_get_left_ticket = WebDriverWait(self.driver, timeout=20).until(
             EC.element_to_be_clickable((By.ID, "query_ticket")))
         self.button_get_left_ticket.click()
-        self.get_button()
+        self.get_train_ticket_button()
 
 
 
