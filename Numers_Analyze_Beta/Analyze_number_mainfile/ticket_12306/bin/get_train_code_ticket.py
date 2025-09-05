@@ -185,10 +185,22 @@ class get_ticket:
         print(self.select_info_list)
         if self.is_already_error==False:
             try:
+                self.count_tr=0
+                self.is_trLabel_index_list=[]
+                # self.fa_ticket_labels=self.driver.find_element(
+                #     By.XPATH, '//*[@id="queryLeftTable"]/*')
                 self.ticket_labels=self.driver.find_elements(
-                    By.XPATH, '/html/body/div[2]/div[7]/div[13]/table/tbody/tr[4]')
-                # '//tbody[@id="queryLeftTable"]/tr[@datatran="{}"]'.format(str(self.select_info_list[0]))
-                print(self.ticket_labels)
+                    By.XPATH, '//tr')
+                # for tr_label in self.ticket_labels:
+                #     self.count_tr+=1
+                #     tr_label_get=tr_label.get_attribute("outerHTML")[3:13+len(self.select_info_list[0])]
+                #     print(tr_label_get)
+                #     if tr_label_get=='datatran="{}"'.format(self.select_info_list[0]):
+                #         self.is_trLabel_index_list.append(self.count_tr)
+                # , self.fa_ticket_labels.get_attribute("outerHTML")
+                for i in range(len(self.ticket_labels)):
+                    print(self.ticket_labels[i].get_attribute("outerHTML"))
+                print(len(self.ticket_labels))
                 self.button_xpath = (
                     "/html/body/div[2]/div[7]/div[13]/table/tbody/tr[{}]/td[13]/a".format(self.train_code_index))
                 self.button_get_choose_ticket = WebDriverWait(self.driver, timeout=20).until(
