@@ -7,7 +7,8 @@ from tkinter import font
 import tkinter.messagebox
 from .get_train_code_ticket import get_ticket
 class train_ticket_choose_UI:
-    def __init__(self, train_info, main_window_height, main_window_width, train_date, choosed_start_station, choosed_end_station):
+    def __init__(self, train_info, main_window_height, main_window_width, train_date,
+                 choosed_start_station, choosed_end_station, reflex_table):
         self.dir_bar_list = []
         self.dir_bar = ""
         self.current_dir_this_file = os.path.dirname(os.path.abspath(__file__))
@@ -22,6 +23,7 @@ class train_ticket_choose_UI:
         self.station_name_dir=os.path.join(self.current_dir_this_file, "temp", "station_name_info.json")
         self.train_code_dir=os.path.join(self.current_dir_this_file, "temp", "data_socket_train_code.log")
         self.train_index=0
+        self.reflex_table=reflex_table
         self.condition=None
         self.period_start_name = None
         self.period_end_name = None
@@ -127,9 +129,11 @@ class train_ticket_choose_UI:
     def get_ticket_thread(self):
         print(self.train_code_list)
         self.ticket_choose_train_thread = threading.Thread(
-            target=get_ticket, args=(self.text_train_code, self.choosed_start_station, self.choosed_end_station,
-                                     self.period_start_name, self.period_end_name, self.train_go_date, self.condition,
-                                     self.choose_train_ticket, self.period_start_time, self.train_code_list), name="thread10", daemon=True)
+            target=get_ticket,
+            args=(self.text_train_code, self.choosed_start_station, self.choosed_end_station,
+                  self.period_start_name, self.period_end_name, self.train_go_date, self.condition,
+                  self.choose_train_ticket, self.period_start_time, self.train_code_list, self.reflex_table),
+            name="thread10", daemon=True)
         self.ticket_choose_train_thread_start = self.ticket_choose_train_thread.start()
     def get_enter_contant(self):
         self.count=0

@@ -290,7 +290,7 @@ class get_ticket_station_info:
         self.ticket_choose_interface_thread=threading.Thread(
             target=train_ticket_choose_UI,
             args=(self.ticket_all_info_dict, self.main_window_height, self.main_window_width,
-                  self.date_start, self.start_city, self.end_city),
+                  self.date_start, self.start_city, self.end_city, self.reflex_table),
             name="thread5", daemon=True)
         self.ticket_choose_interface_thread_start=self.ticket_choose_interface_thread.start()
 

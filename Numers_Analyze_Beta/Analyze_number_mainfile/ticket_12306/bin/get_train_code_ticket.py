@@ -9,7 +9,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 class get_ticket:
     def __init__(self, train_code, choose_start_station, choose_end_station, period_start_station, period_end_station,
-                 train_go_date, condition, choose_index_train, train_start_time, train_code_list):
+                 train_go_date, condition, choose_index_train, train_start_time, train_code_list, reflex_table):
         self.init_url = "https://kyfw.12306.cn/otn/leftTicket/init"
         self.is_already_error=False
         self.button_xpath = None
@@ -25,16 +25,18 @@ class get_ticket:
         self.choose_index_train = choose_index_train
         self.train_start_time=train_start_time
         self.train_code_list=train_code_list
+        self.reflex_table=reflex_table
+        self.cookies = [{"name": "JSESSIONID", "value": "9A3A60B55A2ACC51B24B6742E68E6230"},
+                        {"name": "RAIL_EXPIRATION", "value": "1582469373862"},
+                        {"name": "RAIL_DEVICEID",
+                         "value": "ERLN34ss4QuQiVGSBZaJz35V5mfm37V7QotSqYowrxa7ljZeEnI-RQjWRUTV8qjMdb5w8sps-WX286eIS9RF7Y_TOr4Cj6wSa_4UIfjh8GwzQPfWOV6nz8EIIIEfX-3ciBnc11jpF14E5BBpRzAqtiV8gdANBiKr"},
+                        {"name": "BIGipServerpool_passport", "value": "267190794.50215.0000"},
+                        {"name": "route", "value": "495c805987d0f5c8c84b14f60212447d"}]
         print(train_code, choose_start_station, choose_end_station, period_start_station, period_end_station,
-              train_go_date, condition, choose_index_train, train_start_time, train_code_list)
+              train_go_date, condition, choose_index_train, train_start_time, train_code_list, self.reflex_table)
         self.open_browsers()
     def open_browsers(self):
         self.count=0
-        self.cookies=[{"name": "JSESSIONID", "value": "9A3A60B55A2ACC51B24B6742E68E6230"},
-                      {"name": "RAIL_EXPIRATION", "value": "1582469373862"},
-                      {"name": "RAIL_DEVICEID", "value": "ERLN34ss4QuQiVGSBZaJz35V5mfm37V7QotSqYowrxa7ljZeEnI-RQjWRUTV8qjMdb5w8sps-WX286eIS9RF7Y_TOr4Cj6wSa_4UIfjh8GwzQPfWOV6nz8EIIIEfX-3ciBnc11jpF14E5BBpRzAqtiV8gdANBiKr"},
-                      {"name": "BIGipServerpool_passport", "value": "267190794.50215.0000"},
-                      {"name": "route", "value": "495c805987d0f5c8c84b14f60212447d"}]
         self.abs_dir = os.path.dirname(os.path.abspath(__file__))
         self.inborn_driver_list=["firefox", "waterfox", "firefox-developer", "firefox-nightly", "msedge", "msedge-dev", "msedge-beta",
                                  "msedge-canary", "chromium", "chrome", "chrome-canary", "chrome-dev", "ungoogled-chromium"]
@@ -183,36 +185,19 @@ class get_ticket:
     def get_train_ticket_button(self):
         self.select_info_list=None
         if self.condition == "1":
-            # for index in range(self.train_code):
-            #     self.train_code_index += 2
+            for index in range(self.reflex_table[self.train_code]):
+                self.train_code_index += 2
             self.select_info_list=[self.train_code_list[self.train_code-1], self.train_start_time,
                                    self.period_start_station, self.period_end_station]
         elif self.condition == "2":
             self.ticket_index=int(len(self.choose_index_train)/2)
+            for index in range(self.reflex_table[self.ticket_index]):
+                self.train_code_index += 2
             self.select_info_list=[self.train_code, self.train_start_time[self.ticket_index],
                                    self.period_start_station[self.ticket_index], self.period_end_station[self.ticket_index]]
-            # for index in range(self.choose_index_train[0] + 1):
-            #     self.train_code_index += 2
-        print(self.select_info_list)
+        print(self.train_code_index)
         if self.is_already_error==False:
             try:
-                self.count_tr=0
-                self.is_trLabel_index_list=[]
-                self.fa_ticket_labels=self.driver.find_elements(
-                    By.XPATH, '//tbody[@id="queryLeftTable"]')
-                self.ticket_labels=self.driver.find_elements(
-                    By.XPATH, './/tr[@datatran="{}"]'.format(str(self.select_info_list[0])))
-                # for tr_label in self.ticket_labels:
-                #     self.count_tr+=1
-                #     tr_label_get=tr_label.get_attribute("outerHTML")[3:13+len(self.select_info_list[0])]
-                #     print(tr_label_get)
-                #     if tr_label_get=='datatran="{}"'.format(self.select_info_list[0]):
-                #         self.is_trLabel_index_list.append(self.count_tr)
-                # , self.fa_ticket_labels.get_attribute("outerHTML")
-
-                for i in range(len(self.fa_ticket_labels)):
-                    print(self.fa_ticket_labels[i].get_attribute("outerHTML"))
-                #print(len(self.ticket_labels))
                 self.button_xpath = (
                     "/html/body/div[2]/div[7]/div[13]/table/tbody/tr[{}]/td[13]/a".format(self.train_code_index))
                 self.button_get_choose_ticket = WebDriverWait(self.driver, timeout=20).until(
@@ -254,7 +239,6 @@ class get_ticket:
             EC.element_to_be_clickable((By.ID, "query_ticket")))
         self.button_get_left_ticket.click()
         self.get_train_ticket_button()
-
 
 
 
