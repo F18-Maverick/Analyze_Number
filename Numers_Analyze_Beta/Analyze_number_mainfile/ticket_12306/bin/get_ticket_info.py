@@ -153,6 +153,7 @@ class get_ticket_station_info:
         self.train_end_time_list=[]
         self.pass_time_list=[]
         self.ticket_can_get_Y_N=[]
+        self.reflex_table={} # key值是项目UI输入index，value是12306官网按钮的index
         for all_train_info in self.train_info_dict["data"]["result"]:
             self.count_5 = 0
             self.count_6 = 0
@@ -253,6 +254,7 @@ class get_ticket_station_info:
                 self.ticket_Y_N="该票未起售"
             self.ticket_can_get_Y_N.append(self.ticket_Y_N)
         for all_info_index in range(len(self.train_code_list)):
+            self.reflex_table[all_info_index]=all_info_index
             self.train_info_dict = []
             self.every_train_info={}
             self.train_info_dict.append(self.train_start_station_list[all_info_index])
@@ -265,11 +267,30 @@ class get_ticket_station_info:
             self.train_info_dict.append(self.ticket_can_get_Y_N[all_info_index])
             self.every_train_info[self.train_code_list[all_info_index]]=self.train_info_dict
             self.ticket_all_info_dict.append(self.every_train_info)
+        for count_index in range(len(self.ticket_can_get_Y_N)):
+            if self.ticket_can_get_Y_N[count_index]=="该票未起售":
+                del self.reflex_table[count_index]
+        self.reflex_table_keys_list=list(self.reflex_table.keys())
+        self.reflex_table_values_list=list(self.reflex_table.values())
+        for count_train_code_index in range(len(self.reflex_table)-1):
+            for left_train_code_index in range(count_train_code_index+1, len(self.reflex_table)):
+                if (self.train_code_list[self.reflex_table_values_list[count_train_code_index]]==
+                    self.train_code_list[self.reflex_table_values_list[left_train_code_index]]):
+                    self.reflex_table_values_list.insert(
+                        count_train_code_index,
+                        self.reflex_table_values_list[left_train_code_index])
+                    del self.reflex_table_values_list[left_train_code_index+1]
+        for index in range(len(self.reflex_table_values_list)):
+            self.reflex_table[self.reflex_table_keys_list[index]]=self.reflex_table_values_list[index]
+            print(self.reflex_table_values_list[index])
+            print(self.train_code_list[self.reflex_table_values_list[index]])
+        print(self.reflex_table)
         with open(os.path.join(self.temp_dir, "all_TrainStation_info.json"), "w", encoding="utf-8") as train_info_json:
             train_info_json.write(json.dumps(self.ticket_all_info_dict, ensure_ascii=False))
         self.ticket_choose_interface_thread=threading.Thread(
-            target=train_ticket_choose_UI, args=(self.ticket_all_info_dict, self.main_window_height, self.main_window_width,
-                                                 self.date_start, self.start_city, self.end_city),
+            target=train_ticket_choose_UI,
+            args=(self.ticket_all_info_dict, self.main_window_height, self.main_window_width,
+                  self.date_start, self.start_city, self.end_city),
             name="thread5", daemon=True)
         self.ticket_choose_interface_thread_start=self.ticket_choose_interface_thread.start()
 

@@ -30,6 +30,11 @@ class get_ticket:
         self.open_browsers()
     def open_browsers(self):
         self.count=0
+        self.cookies=[{"name": "JSESSIONID", "value": "9A3A60B55A2ACC51B24B6742E68E6230"},
+                      {"name": "RAIL_EXPIRATION", "value": "1582469373862"},
+                      {"name": "RAIL_DEVICEID", "value": "ERLN34ss4QuQiVGSBZaJz35V5mfm37V7QotSqYowrxa7ljZeEnI-RQjWRUTV8qjMdb5w8sps-WX286eIS9RF7Y_TOr4Cj6wSa_4UIfjh8GwzQPfWOV6nz8EIIIEfX-3ciBnc11jpF14E5BBpRzAqtiV8gdANBiKr"},
+                      {"name": "BIGipServerpool_passport", "value": "267190794.50215.0000"},
+                      {"name": "route", "value": "495c805987d0f5c8c84b14f60212447d"}]
         self.abs_dir = os.path.dirname(os.path.abspath(__file__))
         self.inborn_driver_list=["firefox", "waterfox", "firefox-developer", "firefox-nightly", "msedge", "msedge-dev", "msedge-beta",
                                  "msedge-canary", "chromium", "chrome", "chrome-canary", "chrome-dev", "ungoogled-chromium"]
@@ -134,6 +139,8 @@ class get_ticket:
                     self.web_driver=Service(executable_path=self.driver_dir)
                     self.driver = webdriver.Firefox(service=self.web_driver, options=self.options)
                     self.contant=self.driver.get(self.init_url)
+                    for cookies in self.cookies:
+                        self.driver.add_cookie(cookies)
                     self.web_get_ticket()
                 elif (self.choosed_driver_type_list[index]=="msedge" or self.choosed_driver_type_list[index]=="msedge-dev"
                       or self.choosed_driver_type_list[index]=="msedge-beta" or self.choosed_driver_type_list[index]=="msedge-canary"):
@@ -145,6 +152,8 @@ class get_ticket:
                     self.web_driver = Service(executable_path=self.driver_dir)
                     self.driver=webdriver.Edge(service=self.web_driver, options=self.options)
                     self.contant=self.driver.get(self.init_url)
+                    for cookies in self.cookies:
+                        self.driver.add_cookie(cookies)
                     self.web_get_ticket()
                 elif (self.choosed_driver_type_list[index]=="chrome" or self.choosed_driver_type_list[index]=="chrome-dev"
                       or self.choosed_driver_type_list[index]=="chromium" or self.choosed_driver_type_list[index]=="chrome-canary"
@@ -158,6 +167,8 @@ class get_ticket:
                     self.web_driver = Service(executable_path=self.driver_dir)
                     self.driver=webdriver.Chrome(service=self.web_driver, options=self.options)
                     self.contant=self.driver.get(self.init_url)
+                    for cookies in self.cookies:
+                        self.driver.add_cookie(cookies)
                     self.web_get_ticket()
                 else:
                     tkinter.messagebox.showerror(title="Error", message="Error")
@@ -187,10 +198,10 @@ class get_ticket:
             try:
                 self.count_tr=0
                 self.is_trLabel_index_list=[]
-                # self.fa_ticket_labels=self.driver.find_element(
-                #     By.XPATH, '//*[@id="queryLeftTable"]/*')
+                self.fa_ticket_labels=self.driver.find_elements(
+                    By.XPATH, '//tbody[@id="queryLeftTable"]')
                 self.ticket_labels=self.driver.find_elements(
-                    By.XPATH, '//tr')
+                    By.XPATH, './/tr[@datatran="{}"]'.format(str(self.select_info_list[0])))
                 # for tr_label in self.ticket_labels:
                 #     self.count_tr+=1
                 #     tr_label_get=tr_label.get_attribute("outerHTML")[3:13+len(self.select_info_list[0])]
@@ -198,9 +209,10 @@ class get_ticket:
                 #     if tr_label_get=='datatran="{}"'.format(self.select_info_list[0]):
                 #         self.is_trLabel_index_list.append(self.count_tr)
                 # , self.fa_ticket_labels.get_attribute("outerHTML")
-                for i in range(len(self.ticket_labels)):
-                    print(self.ticket_labels[i].get_attribute("outerHTML"))
-                print(len(self.ticket_labels))
+
+                for i in range(len(self.fa_ticket_labels)):
+                    print(self.fa_ticket_labels[i].get_attribute("outerHTML"))
+                #print(len(self.ticket_labels))
                 self.button_xpath = (
                     "/html/body/div[2]/div[7]/div[13]/table/tbody/tr[{}]/td[13]/a".format(self.train_code_index))
                 self.button_get_choose_ticket = WebDriverWait(self.driver, timeout=20).until(
