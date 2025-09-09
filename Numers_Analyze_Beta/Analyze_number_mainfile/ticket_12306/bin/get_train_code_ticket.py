@@ -184,14 +184,20 @@ class get_ticket:
             pass
     def get_train_ticket_button(self):
         self.select_info_list=None
+        self.reflex_table_keys=list(self.reflex_table.keys())
+        self.reflex_table_values=list(self.reflex_table.values())
         if self.condition == "1":
-            for index in range(self.reflex_table[self.train_code]):
+            self.index = self.reflex_table_values.index(self.train_code-1)
+            self.range_value = self.reflex_table_keys[self.index]+1
+            for index in range(self.range_value):
                 self.train_code_index += 2
             self.select_info_list=[self.train_code_list[self.train_code-1], self.train_start_time,
                                    self.period_start_station, self.period_end_station]
         elif self.condition == "2":
             self.ticket_index=int(len(self.choose_index_train)/2)
-            for index in range(self.reflex_table[self.ticket_index]):
+            self.index = self.reflex_table_values.index(self.choose_index_train[self.ticket_index])
+            self.range_value = self.reflex_table_keys[self.index]+1
+            for index in range(self.range_value):
                 self.train_code_index += 2
             self.select_info_list=[self.train_code, self.train_start_time[self.ticket_index],
                                    self.period_start_station[self.ticket_index], self.period_end_station[self.ticket_index]]
@@ -200,6 +206,7 @@ class get_ticket:
             try:
                 self.button_xpath = (
                     "/html/body/div[2]/div[7]/div[13]/table/tbody/tr[{}]/td[13]/a".format(self.train_code_index))
+                print(self.button_xpath)
                 self.button_get_choose_ticket = WebDriverWait(self.driver, timeout=20).until(
                     EC.element_to_be_clickable((By.XPATH, self.button_xpath)))
                 self.button_get_choose_ticket.click()
