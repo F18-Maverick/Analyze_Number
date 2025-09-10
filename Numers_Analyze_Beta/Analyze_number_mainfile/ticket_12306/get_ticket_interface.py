@@ -149,6 +149,15 @@ class Get_ticket_interface:
         self.button_update_info_place = self.button_update_info.place(x=self.x_4/2, y=self.y_4, anchor="center")
         self.update_info_control = self.button_update_info.bind(
             "<Button-1>", lambda event_1: self.update_station_info_thread())
+        self.button_sign_in = tkinter.Button(
+            self.Windows, text="登录", width=8, height=1, font=("Arial", 8, "underline"))
+        self.button_sign_in_width = self.button_sign_in.winfo_width()
+        self.button_sign_in_height = self.button_sign_in.winfo_height()
+        self.x_5 = int(self.Windows_width - self.button_sign_in_width)-30
+        self.y_5 = 200
+        self.button_sign_in_place = self.button_sign_in.place(x=self.x_5, y=self.y_5, anchor="center")
+        # self.update_info_control = self.button_update_info.bind(
+        #     "<Button-1>", lambda event_1: self.update_station_info_thread())
 
 
 
