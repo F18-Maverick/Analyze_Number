@@ -1,8 +1,8 @@
 import os
 import tkinter
 class sign_in:
-    def __init__(self, computer_info_width, computer_info_height):
-        self.file_dir_name = os.path.dirname(os.path.abspath(__file__))
+    def __init__(self, computer_info_width, computer_info_height, file_dir):
+        self.file_dir_name = file_dir
         self.temp_dir = os.path.join(self.file_dir_name, 'temp')
         self.x_entry = 50
         self.y_entry = 80 / 3
@@ -34,7 +34,7 @@ class sign_in:
             selectbackground="#FFFF00", selectforeground="#DC143C", font=("宋体", 15, "underline"),
             width=40, relief="solid", insertwidth=1)
         self.password_entry.place(x=self.x_entry, y=self.y_entry+45)
-        self.button=self.button_get_start_time()
+        self.button=self.button_get_sign_in_info()
     def get_data(self):
         self.contact_info=self.contact_info_entry.get()
         self.password=self.password_entry.get()
@@ -44,7 +44,7 @@ class sign_in:
         with open(os.path.join(self.temp_dir, "data_socket_user_sign_in_info.log"), "w", encoding="utf-8") as datalog_write:
             datalog_write.write(str(self.get_result))
         self.windows_sign_in.destroy()
-    def button_get_start_time(self):
+    def button_get_sign_in_info(self):
         self.button_sign_in_sure = tkinter.Button(
             self.windows_sign_in, text="确认", width=8, height=1, font=("Arial", 8, "underline"))
         self.button_get_start_time_sure_pack = self.button_sign_in_sure.pack(side=tkinter.BOTTOM)

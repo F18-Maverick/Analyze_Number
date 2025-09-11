@@ -1,6 +1,7 @@
 import os
 import sys
 import tkinter.messagebox
+from .sign_in_UI import sign_in
 from selenium import webdriver
 from . import browsers_searcher
 from selenium.webdriver.common.by import By
@@ -9,7 +10,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 class get_ticket:
     def __init__(self, train_code, choose_start_station, choose_end_station, period_start_station, period_end_station,
-                 train_go_date, condition, choose_index_train, train_start_time, train_code_list, reflex_table):
+                 train_go_date, condition, choose_index_train, train_start_time, train_code_list, reflex_table, file_dir,
+                 computer_screen_height, computer_screen_width):
+        self.file_dir_name = file_dir
+        self.temp_dir = os.path.join(self.file_dir_name, 'temp')
         self.init_url = "https://kyfw.12306.cn/otn/leftTicket/init"
         self.is_already_error=False
         self.button_xpath = None
@@ -26,6 +30,8 @@ class get_ticket:
         self.train_start_time=train_start_time
         self.train_code_list=train_code_list
         self.reflex_table=reflex_table
+        self.computer_width=computer_screen_width
+        self.computer_high=computer_screen_height
         self.cookies = [{"name": "JSESSIONID", "value": "9A3A60B55A2ACC51B24B6742E68E6230"},
                         {"name": "RAIL_EXPIRATION", "value": "1582469373862"},
                         {"name": "RAIL_DEVICEID",
@@ -223,6 +229,15 @@ class get_ticket:
                 message="Can not get ticket correctly, please try share these bug in our github issues")
         else:
             pass
+    def sign_in(self):
+        self.sign_in_info=None
+        self.sign_in_socket_file=os.path.join(self.temp_dir, "data_socket_user_sign_in_info.log")
+        if not os.path.exists(self.sign_in_socket_file):
+            tkinter.messagebox.showerror(title="登录", message="请先登录")
+            sign_in(self.computer_width, self.computer_high, self.file_dir_name)
+        with open(self.sign_in_socket_file, "r", encoding="utf-8") as sign_in_info:
+            self.sign_in_info=sign_in_info.read()
+        print(self.sign_in_info)
     def web_get_ticket(self):
         self.from_station_input = WebDriverWait(self.driver, timeout=20).until(
             EC.element_to_be_clickable((By.ID, "fromStationText")))
@@ -246,7 +261,7 @@ class get_ticket:
             EC.element_to_be_clickable((By.ID, "query_ticket")))
         self.button_get_left_ticket.click()
         self.get_train_ticket_button()
-
+        self.sign_in()
 
 
 

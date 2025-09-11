@@ -158,7 +158,7 @@ class Get_ticket_interface:
         self.button_sign_in_place = self.button_sign_in.place(x=self.x_5, y=self.y_5, anchor="ne")
         self.sign_in_control = self.button_sign_in.bind(
             "<Button-1>", lambda event_1: thread_all().user_sign_in_UI_thread(
-                self.computer_info_width, self.computer_info_height))
+                self.computer_info_width, self.computer_info_height, self.file_dir_name))
 
 
 

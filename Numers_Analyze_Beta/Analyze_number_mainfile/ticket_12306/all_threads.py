@@ -3,7 +3,7 @@ from bin import get_ticket_info
 from choose_start_time_UI import choose_start_time
 from choose_end_station_UI import choose_end_station
 from choose_start_station_UI import choose_start_station
-from sign_in_UI import sign_in
+from bin.sign_in_UI import sign_in
 class thread_all:
     def choose_start_station_UI_thread(self, computer_width, computer_height):
         self.thread_choose_UI=threading.Thread(target=choose_start_station, args=(computer_width, computer_height),
@@ -17,8 +17,8 @@ class thread_all:
         self.thread_choose_UI=threading.Thread(target=choose_start_time, args=(computer_width, computer_height),
                                                name="thread3", daemon=True)
         self.thread_choose_UI_date=self.thread_choose_UI.start()
-    def user_sign_in_UI_thread(self, computer_width, computer_high):
-        self.thread_sign_in_UI=threading.Thread(target=sign_in, args=(computer_width, computer_high),
+    def user_sign_in_UI_thread(self, computer_width, computer_high, file_dir):
+        self.thread_sign_in_UI=threading.Thread(target=sign_in, args=(computer_width, computer_high, file_dir),
                                          name="thread5", daemon=True)
         self.thread_sign_in_UI=self.thread_sign_in_UI.start()
     def download_ticket_station_info_thread(self, computer_height, computer_width):

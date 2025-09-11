@@ -9,6 +9,8 @@ from .get_train_code_ticket import get_ticket
 class train_ticket_choose_UI:
     def __init__(self, train_info, main_window_height, main_window_width, train_date,
                  choosed_start_station, choosed_end_station, reflex_table):
+        self.main_window_height=main_window_height
+        self.main_window_width=main_window_width
         self.dir_bar_list = []
         self.dir_bar = ""
         self.current_dir_this_file = os.path.dirname(os.path.abspath(__file__))
@@ -51,8 +53,8 @@ class train_ticket_choose_UI:
         if sys.platform=="linux":
             self.ListBox_height = int(self.interface_height / self.text_height) - 5
         self.every_lettice_length = self.ListBox_width / 6
-        self.screen_choose_ticket_x = int((main_window_width - self.interface_width) / 2)
-        self.screen_choose_ticket_y = int((main_window_height - self.interface_height) / 2)
+        self.screen_choose_ticket_x = int((self.main_window_width - self.interface_width) / 2)
+        self.screen_choose_ticket_y = int((self.main_window_height - self.interface_height) / 2)
         self.info_UI()
         self.train_ticket_UI=tkinter.Toplevel()
         self.windows_choose_ticket_position_str = "{}x{}+{}+{}".format(
@@ -132,7 +134,8 @@ class train_ticket_choose_UI:
             target=get_ticket,
             args=(self.text_train_code, self.choosed_start_station, self.choosed_end_station,
                   self.period_start_name, self.period_end_name, self.train_go_date, self.condition,
-                  self.choose_train_ticket, self.period_start_time, self.train_code_list, self.reflex_table),
+                  self.choose_train_ticket, self.period_start_time, self.train_code_list,
+                  self.reflex_table, self.current_dir_this_file, self.main_window_height, self.main_window_width),
             name="thread10", daemon=True)
         self.ticket_choose_train_thread_start = self.ticket_choose_train_thread.start()
     def get_enter_contant(self):
