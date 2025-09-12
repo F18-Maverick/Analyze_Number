@@ -235,6 +235,8 @@ class get_ticket:
         self.contact_input_xpath=r"/html/body/div[2]/div[33]/div[2]/div[1]/div[1]/div[1]/input"
         self.password_input_xpath=r"/html/body/div[2]/div[33]/div[2]/div[1]/div[1]/div[2]/input"
         self.sure_sign_in_info_xpath=r"/html/body/div[2]/div[33]/div[2]/div[1]/div[1]/div[4]/a"
+        self.ID_code_entry_xpath=r"/html/body/div[2]/div[35]/div[2]/div[1]/div/div[1]/input"
+        self.get_valid_code_xpath=r"/html/body/div[2]/div[35]/div[2]/div[1]/div/div[2]/a"
         self.sign_in_socket_file=os.path.join(self.temp_dir, "data_socket_user_sign_in_info.log")
         if not os.path.exists(self.sign_in_socket_file):
             tkinter.messagebox.showerror(title="登录", message="请先登录")
@@ -255,6 +257,14 @@ class get_ticket:
         self.sure_sign_in_info_button=WebDriverWait(self.driver, timeout=20).until(
             EC.element_to_be_clickable((By.XPATH, self.sure_sign_in_info_xpath)))
         self.sure_sign_in_info_button.click()
+        self.ID_code_input=WebDriverWait(self.driver, timeout=20).until(
+            EC.element_to_be_clickable((By.XPATH, self.ID_code_entry_xpath)))
+        self.ID_code_input.click()
+        self.ID_code_input.clear()
+        self.ID_code_input.send_keys(self.sign_in_info[2])
+        self.get_valid_code_button=WebDriverWait(self.driver, timeout=20).until(
+            EC.element_to_be_clickable((By.XPATH, self.get_valid_code_xpath)))
+        self.get_valid_code_button.click()
         print(self.sign_in_info)
     def web_get_ticket(self):
         self.from_station_input = WebDriverWait(self.driver, timeout=20).until(

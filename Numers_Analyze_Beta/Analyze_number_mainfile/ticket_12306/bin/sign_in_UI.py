@@ -34,11 +34,19 @@ class sign_in:
             selectbackground="#FFFF00", selectforeground="#DC143C", font=("宋体", 15, "underline"),
             width=40, relief="solid", insertwidth=1)
         self.password_entry.place(x=self.x_entry, y=self.y_entry+45)
+        self.ID_card_num_text = tkinter.Label(self.windows_sign_in, text="身份证后4位")
+        self.ID_card_num_text.place(x=self.x_entry, y=self.y_entry+70)
+        self.ID_card_entry = tkinter.Entry(
+            self.windows_sign_in, background="#FFFFFF", foreground="#4B0082",
+            selectbackground="#FFFF00", selectforeground="#DC143C", font=("宋体", 15, "underline"),
+            width=40, relief="solid", insertwidth=1)
+        self.ID_card_entry.place(x=self.x_entry, y=self.y_entry + 95)
         self.button=self.button_get_sign_in_info()
     def get_data(self):
         self.contact_info=self.contact_info_entry.get()
         self.password=self.password_entry.get()
-        self.get_result=[self.contact_info, self.password]
+        self.ID_card_value=self.ID_card_entry.get()
+        self.get_result=[self.contact_info, self.password, self.ID_card_value]
         if not os.path.exists(self.temp_dir):
             os.makedirs(self.temp_dir)
         with open(os.path.join(self.temp_dir, "data_socket_user_sign_in_info.log"), "w", encoding="utf-8") as datalog_write:
