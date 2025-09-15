@@ -1,6 +1,7 @@
 import os
 import sys
 import ast
+import time
 import tkinter.messagebox
 from selenium import webdriver
 from .sign_in_UI import sign_in
@@ -239,10 +240,16 @@ class get_ticket:
         self.ID_code_entry_xpath=r"/html/body/div[2]/div[35]/div[2]/div[1]/div/div[1]/input"
         self.get_valid_code_xpath=r"/html/body/div[2]/div[35]/div[2]/div[1]/div/div[2]/a"
         self.input_valid_code_xpath=r"/html/body/div[2]/div[35]/div[2]/div[1]/div/div[2]/input"
+        self.sure_valid_code_button_xpath=r"/html/body/div[2]/div[35]/div[2]/div[1]/div/div[4]/a"
         self.sign_in_socket_file=os.path.join(self.temp_dir, "data_socket_user_sign_in_info.log")
+        self.valid_code_socket_file=os.path.join(self.temp_dir, "data_socket_user_valid_code_info.log")
+        if os.path.exists(self.valid_code_socket_file):
+            os.remove(self.valid_code_socket_file)
         if not os.path.exists(self.sign_in_socket_file):
             tkinter.messagebox.showerror(title="登录", message="请先登录")
             sign_in(self.computer_width, self.computer_high, self.file_dir_name)
+        print(self.sign_in_socket_file)
+        print(os.path.exists(self.sign_in_socket_file))
         with open(self.sign_in_socket_file, "r", encoding="utf-8") as sign_in_info:
             self.sign_in_info=sign_in_info.read()
         self.sign_in_info=ast.literal_eval(self.sign_in_info)
@@ -268,6 +275,17 @@ class get_ticket:
             EC.element_to_be_clickable((By.XPATH, self.get_valid_code_xpath)))
         self.get_valid_code_button.click()
         get_valid_code(self.computer_width, self.computer_high, self.file_dir_name)
+        with open(self.valid_code_socket_file, "r", encoding="utf-8") as valid_code_info:
+            self.valid_code_info=valid_code_info.read()
+        print(self.valid_code_info)
+        self.valid_code_input=WebDriverWait(self.driver, timeout=20).until(
+            EC.element_to_be_clickable((By.XPATH, self.input_valid_code_xpath)))
+        self.valid_code_input.click()
+        self.valid_code_input.clear()
+        self.valid_code_input.send_keys(self.valid_code_info)
+        self.sure_valid_code_button=WebDriverWait(self.driver, timeout=20).until(
+            EC.element_to_be_clickable((By.XPATH, self.sure_valid_code_button_xpath)))
+        self.sure_valid_code_button.click()
         print(self.sign_in_info)
     def web_get_ticket(self):
         self.from_station_input = WebDriverWait(self.driver, timeout=20).until(
