@@ -1,7 +1,9 @@
 import os
+import time
 import tkinter
+import threading
 class get_valid_code:
-    def __init__(self, computer_info_width, computer_info_height, file_dir):
+    def __init__(self, computer_info_width, computer_info_height, file_dir, phone_number):
         self.file_dir_name = file_dir
         self.temp_dir = os.path.join(self.file_dir_name, 'temp')
         self.x_entry = 50
@@ -28,6 +30,18 @@ class get_valid_code:
             width=40, relief="solid", insertwidth=1)
         self.valid_code_entry.place(x=self.x_entry, y=self.y_entry)
         self.button=self.button_get_sign_in_info()
+        self.loading_valid_code="已经验证码发送给:{}".format(phone_number)
+        self.loading_valid_code_text=tkinter.Label(self.windows_get_valid_code, text=self.loading_valid_code)
+        self.loading_valid_code_text.place(x=self.x_entry, y=self.y_entry+40)
+        self.time_countdown_thread=threading.Thread(target=self.time_count_down)
+        self.time_countdown_thread.start()
+    def time_count_down(self):
+        self.time_count_total=60
+        while self.time_count_total!=0:
+            self.time_count_total-=1
+            time.sleep(1)
+            self.time_text=tkinter.Label(self.windows_get_valid_code, text="重新发送({}秒)".format(self.time_count_total))
+            self.time_text.place(x=self.x_entry, y=self.y_entry+60)
     def get_data(self):
         self.contact_info=self.valid_code_entry.get()
         if not os.path.exists(self.temp_dir):

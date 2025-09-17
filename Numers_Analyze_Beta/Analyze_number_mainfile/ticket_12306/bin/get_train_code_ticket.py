@@ -241,6 +241,7 @@ class get_ticket:
         self.get_valid_code_xpath=r"/html/body/div[2]/div[35]/div[2]/div[1]/div/div[2]/a"
         self.input_valid_code_xpath=r"/html/body/div[2]/div[35]/div[2]/div[1]/div/div[2]/input"
         self.sure_valid_code_button_xpath=r"/html/body/div[2]/div[35]/div[2]/div[1]/div/div[4]/a"
+        self.sign_in_statement_xpath=r"/html/body/div[2]/div[35]/div[2]/div[1]/div/div[3]/p"
         self.sign_in_socket_file=os.path.join(self.temp_dir, "data_socket_user_sign_in_info.log")
         self.valid_code_socket_file=os.path.join(self.temp_dir, "data_socket_user_valid_code_info.log")
         if os.path.exists(self.valid_code_socket_file):
@@ -276,7 +277,7 @@ class get_ticket:
         self.get_valid_code_button=WebDriverWait(self.driver, timeout=20).until(
             EC.element_to_be_clickable((By.XPATH, self.get_valid_code_xpath)))
         self.get_valid_code_button.click()
-        get_valid_code(self.computer_width, self.computer_high, self.file_dir_name)
+        get_valid_code(self.computer_width, self.computer_high, self.file_dir_name, self.sign_in_info[0])
         while self.is_exist!=True:
             if os.path.exists(self.valid_code_socket_file)==True:
                 self.is_exist=True
