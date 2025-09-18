@@ -4,6 +4,8 @@ import tkinter
 import threading
 class get_valid_code:
     def __init__(self, computer_info_width, computer_info_height, file_dir, phone_number):
+        self.count_total_run=0
+        self.button_resend_valid_code=None
         self.file_dir_name = file_dir
         self.temp_dir = os.path.join(self.file_dir_name, 'temp')
         self.x_entry = 50
@@ -33,15 +35,31 @@ class get_valid_code:
         self.loading_valid_code="已经验证码发送给:{}".format(phone_number)
         self.loading_valid_code_text=tkinter.Label(self.windows_get_valid_code, text=self.loading_valid_code)
         self.loading_valid_code_text.place(x=self.x_entry, y=self.y_entry+40)
-        self.time_countdown_thread=threading.Thread(target=self.time_count_down)
-        self.time_countdown_thread.start()
-    def time_count_down(self):
-        self.time_count_total=60
-        while self.time_count_total!=0:
-            self.time_count_total-=1
-            time.sleep(1)
-            self.time_text=tkinter.Label(self.windows_get_valid_code, text="重新发送({}秒)".format(self.time_count_total))
-            self.time_text.place(x=self.x_entry, y=self.y_entry+60)
+        self.time_count_bind()
+    def time_count_bind(self):
+        self.count_total_run+=1
+        def time_count_down():
+            self.time_count_total=60
+            while self.time_count_total!=0:
+                self.time_count_total-=1
+                time.sleep(1)
+                self.time_text=tkinter.Label(self.windows_get_valid_code, text="重新发送({}秒)".format(self.time_count_total))
+                self.time_text.place(x=self.x_entry, y=self.y_entry+60)
+            self.button_resend_valid_code = tkinter.Button(
+                self.windows_get_valid_code, text="重新发送验证码", width=24, height=1,
+                font=("Arial", 8, "underline"))
+            self.button_resend_valid_code.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+            self.bind_resend_code = self.button_resend_valid_code.bind(
+                "<Button-1>", lambda evnet: self.time_count_bind())
+        def time_count_down_thread():
+            self.time_countdown_thread=threading.Thread(target=time_count_down)
+            self.time_countdown_thread.start()
+        if self.count_total_run!=1:
+            with open(os.path.join(self.temp_dir, "data_socket_user_resend_valid_code_info.log"),
+                      "w", encoding="utf-8") as datalog_write:
+                datalog_write.write(str(1))
+        time_count_down_thread()
+        self.button_resend_valid_code.destroy()
     def get_data(self):
         self.contact_info=self.valid_code_entry.get()
         if not os.path.exists(self.temp_dir):
