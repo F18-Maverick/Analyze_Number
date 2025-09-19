@@ -52,7 +52,7 @@ class get_valid_code:
             self.bind_resend_code = self.button_resend_valid_code.bind(
                 "<Button-1>", lambda evnet: self.time_count_bind())
         def time_count_down_thread():
-            self.time_countdown_thread=threading.Thread(target=time_count_down)
+            self.time_countdown_thread=threading.Thread(target=time_count_down, daemon=True)
             self.time_countdown_thread.start()
         if self.count_total_run!=1:
             with open(os.path.join(self.temp_dir, "data_socket_user_resend_valid_code_info.log"),

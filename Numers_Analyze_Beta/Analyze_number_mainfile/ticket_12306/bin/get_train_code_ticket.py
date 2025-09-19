@@ -1,6 +1,7 @@
 import os
 import sys
 import ast
+import threading
 import tkinter.messagebox
 from selenium import webdriver
 from .sign_in_UI import sign_in
@@ -244,6 +245,7 @@ class get_ticket:
         self.sign_in_statement_xpath=r"/html/body/div[2]/div[35]/div[2]/div[1]/div/div[3]/p"
         self.sign_in_socket_file=os.path.join(self.temp_dir, "data_socket_user_sign_in_info.log")
         self.valid_code_socket_file=os.path.join(self.temp_dir, "data_socket_user_valid_code_info.log")
+        self.valid_code_resend_file=os.path.join(self.temp_dir, "data_socket_user_resend_valid_code_info.log")
         if os.path.exists(self.valid_code_socket_file):
             os.remove(self.valid_code_socket_file)
         if not os.path.exists(self.sign_in_socket_file):
@@ -277,10 +279,19 @@ class get_ticket:
         self.get_valid_code_button=WebDriverWait(self.driver, timeout=20).until(
             EC.element_to_be_clickable((By.XPATH, self.get_valid_code_xpath)))
         self.get_valid_code_button.click()
-        get_valid_code(self.computer_width, self.computer_high, self.file_dir_name, self.sign_in_info[0])
+        self.get_valid_code_thread=threading.Thread(
+            target=get_valid_code,
+            args=(self.computer_width, self.computer_high, self.file_dir_name, self.sign_in_info[0]),
+            daemon=True)
+        self.get_valid_code_thread.start()
         while self.is_exist!=True:
             if os.path.exists(self.valid_code_socket_file)==True:
                 self.is_exist=True
+            if os.path.exists(self.valid_code_resend_file)==True:
+                self.get_valid_code_button = WebDriverWait(self.driver, timeout=20).until(
+                    EC.element_to_be_clickable((By.XPATH, self.get_valid_code_xpath)))
+                self.get_valid_code_button.click()
+                os.remove(self.valid_code_resend_file)
         self.is_exist=False
         with open(self.valid_code_socket_file, "r", encoding="utf-8") as valid_code_info:
             self.valid_code_info=valid_code_info.read()
@@ -318,7 +329,6 @@ class get_ticket:
         self.button_get_left_ticket.click()
         self.get_train_ticket_button()
         self.sign_in()
-
 
 
 
