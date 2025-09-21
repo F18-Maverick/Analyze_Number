@@ -15,6 +15,10 @@ class get_ticket:
     def __init__(self, train_code, choose_start_station, choose_end_station, period_start_station, period_end_station,
                  train_go_date, condition, choose_index_train, train_start_time, train_code_list, reflex_table, file_dir,
                  computer_screen_height, computer_screen_width):
+        self.ID_code_entry_xpath=None
+        self.reget_valid_code_xpath=None
+        self.before_valid_code_xpath=None
+        self.sign_in_statement_xpath=None
         self.file_dir_name = file_dir
         self.temp_dir = os.path.join(self.file_dir_name, 'temp')
         self.init_url = "https://kyfw.12306.cn/otn/leftTicket/init"
@@ -243,6 +247,8 @@ class get_ticket:
         self.input_valid_code_xpath=r"/html/body/div[2]/div[35]/div[2]/div[1]/div/div[2]/input"
         self.sure_valid_code_button_xpath=r"/html/body/div[2]/div[35]/div[2]/div[1]/div/div[4]/a"
         self.sign_in_statement_xpath=r"/html/body/div[2]/div[35]/div[2]/div[1]/div/div[3]/p"
+        self.before_valid_code_xpath=r"/html/body/div[2]/div[35]/div[1]/a"
+        self.reget_valid_code_xpath=r"/html/body/div[2]/div[35]/div[2]/ul/li[2]/a"
         self.sign_in_socket_file=os.path.join(self.temp_dir, "data_socket_user_sign_in_info.log")
         self.valid_code_socket_file=os.path.join(self.temp_dir, "data_socket_user_valid_code_info.log")
         self.valid_code_resend_file=os.path.join(self.temp_dir, "data_socket_user_resend_valid_code_info.log")
@@ -279,6 +285,18 @@ class get_ticket:
         self.get_valid_code_button=WebDriverWait(self.driver, timeout=20).until(
             EC.element_to_be_clickable((By.XPATH, self.get_valid_code_xpath)))
         self.get_valid_code_button.click()
+        self.valid_code_statement_element=self.driver.find_element(By.XPATH, self.sign_in_statement_xpath)
+        self.s
+        print(self.valid_code_statement_element)
+        print(self.valid_code_statement_element.text)
+        if self.valid_code_statement_element.text=="请输入正确的用户信息!":
+            tkinter.messagebox.showerror(title="登录错误", message="请输入正确的用户信息!")
+            self.before_valid_code_button = WebDriverWait(self.driver, timeout=20).until(
+                EC.element_to_be_clickable((By.XPATH, self.before_valid_code_xpath)))
+            self.before_valid_code_button.click()
+            self.sign_in()
+        self.get_valid_code()
+    def get_valid_code(self):
         self.get_valid_code_thread=threading.Thread(
             target=get_valid_code,
             args=(self.computer_width, self.computer_high, self.file_dir_name, self.sign_in_info[0]),
@@ -303,6 +321,23 @@ class get_ticket:
         self.sure_valid_code_button=WebDriverWait(self.driver, timeout=20).until(
             EC.element_to_be_clickable((By.XPATH, self.sure_valid_code_button_xpath)))
         self.sure_valid_code_button.click()
+        if self.valid_code_statement_element.text=="用户名或密码错误。":
+            tkinter.messagebox.showerror(title="登录错误", message="用户名或密码错误。")
+            self.before_valid_code_button = WebDriverWait(self.driver, timeout=20).until(
+                EC.element_to_be_clickable((By.XPATH, self.before_valid_code_xpath)))
+            self.before_valid_code_button.click()
+            self.sign_in()
+        if self.valid_code_statement_element.text=="很抱歉，您输入的短信验证码有误。":
+            tkinter.messagebox.showerror(title="登录错误", message="短信验证码有误。")
+            self.before_valid_code_button = WebDriverWait(self.driver, timeout=20).until(
+                EC.element_to_be_clickable((By.XPATH, self.reget_valid_code_xpath)))
+            self.before_valid_code_button.click()
+            self.ID_code_input = WebDriverWait(self.driver, timeout=20).until(
+                EC.element_to_be_clickable((By.XPATH, self.ID_code_entry_xpath)))
+            self.ID_code_input.click()
+            self.ID_code_input.clear()
+            self.ID_code_input.send_keys(self.sign_in_info[2])
+            self.get_valid_code()
         print(self.valid_code_info)
         print(self.sign_in_info)
     def web_get_ticket(self):
