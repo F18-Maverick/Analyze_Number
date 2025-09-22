@@ -1,6 +1,7 @@
 import os
 import sys
 import ast
+import time
 import threading
 import tkinter.messagebox
 from selenium import webdriver
@@ -19,6 +20,7 @@ class get_ticket:
         self.reget_valid_code_xpath=None
         self.before_valid_code_xpath=None
         self.sign_in_statement_xpath=None
+        self.is_statement_exit=None
         self.file_dir_name = file_dir
         self.temp_dir = os.path.join(self.file_dir_name, 'temp')
         self.init_url = "https://kyfw.12306.cn/otn/leftTicket/init"
@@ -239,6 +241,7 @@ class get_ticket:
     def sign_in(self):
         self.sign_in_info=None
         self.is_exist=False
+        self.is_statement_exit=False
         self.contact_input_xpath=r"/html/body/div[2]/div[33]/div[2]/div[1]/div[1]/div[1]/input"
         self.password_input_xpath=r"/html/body/div[2]/div[33]/div[2]/div[1]/div[1]/div[2]/input"
         self.sure_sign_in_info_xpath=r"/html/body/div[2]/div[33]/div[2]/div[1]/div[1]/div[4]/a"
@@ -285,12 +288,15 @@ class get_ticket:
         self.get_valid_code_button=WebDriverWait(self.driver, timeout=20).until(
             EC.element_to_be_clickable((By.XPATH, self.get_valid_code_xpath)))
         self.get_valid_code_button.click()
-        self.valid_code_statement_element=self.driver.find_element(By.XPATH, self.sign_in_statement_xpath)
-        self.s
-        print(self.valid_code_statement_element)
-        print(self.valid_code_statement_element.text)
-        if self.valid_code_statement_element.text=="请输入正确的用户信息!":
+        while self.is_statement_exit!=True:
+            if self.driver.find_element(By.XPATH, self.sign_in_statement_xpath).is_displayed()==True:
+                self.is_statement_exit=True
+        self.is_statement_exit=False
+        self.valid_code_statement_text = self.driver.find_element(By.XPATH, self.sign_in_statement_xpath).text
+        print(self.valid_code_statement_text)
+        if self.valid_code_statement_text=="请输入正确的用户信息!":
             tkinter.messagebox.showerror(title="登录错误", message="请输入正确的用户信息!")
+            os.remove(self.sign_in_socket_file)
             self.before_valid_code_button = WebDriverWait(self.driver, timeout=20).until(
                 EC.element_to_be_clickable((By.XPATH, self.before_valid_code_xpath)))
             self.before_valid_code_button.click()
@@ -321,22 +327,36 @@ class get_ticket:
         self.sure_valid_code_button=WebDriverWait(self.driver, timeout=20).until(
             EC.element_to_be_clickable((By.XPATH, self.sure_valid_code_button_xpath)))
         self.sure_valid_code_button.click()
-        if self.valid_code_statement_element.text=="用户名或密码错误。":
+        while self.is_statement_exit!=True:
+            if self.driver.find_element(By.XPATH, self.sign_in_statement_xpath).is_displayed()==True:
+                self.is_statement_exit=True
+        self.is_statement_exit=False
+        self.valid_code_statement_text = self.driver.find_element(By.XPATH, self.sign_in_statement_xpath).text
+        if self.valid_code_statement_text=="用户名或密码错误。":
             tkinter.messagebox.showerror(title="登录错误", message="用户名或密码错误。")
+            os.remove(self.sign_in_socket_file)
             self.before_valid_code_button = WebDriverWait(self.driver, timeout=20).until(
                 EC.element_to_be_clickable((By.XPATH, self.before_valid_code_xpath)))
             self.before_valid_code_button.click()
             self.sign_in()
-        if self.valid_code_statement_element.text=="很抱歉，您输入的短信验证码有误。":
+        if self.valid_code_statement_text=="很抱歉，您输入的短信验证码有误。":
             tkinter.messagebox.showerror(title="登录错误", message="短信验证码有误。")
+            os.remove(self.valid_code_socket_file)
             self.before_valid_code_button = WebDriverWait(self.driver, timeout=20).until(
-                EC.element_to_be_clickable((By.XPATH, self.reget_valid_code_xpath)))
+                EC.element_to_be_clickable((By.XPATH, self.before_valid_code_xpath)))
             self.before_valid_code_button.click()
+            time.sleep(0.5)
+            self.sure_sign_in_info_button = WebDriverWait(self.driver, timeout=20).until(
+                EC.element_to_be_clickable((By.XPATH, self.sure_sign_in_info_xpath)))
+            self.sure_sign_in_info_button.click()
             self.ID_code_input = WebDriverWait(self.driver, timeout=20).until(
                 EC.element_to_be_clickable((By.XPATH, self.ID_code_entry_xpath)))
             self.ID_code_input.click()
             self.ID_code_input.clear()
             self.ID_code_input.send_keys(self.sign_in_info[2])
+            self.get_valid_code_button = WebDriverWait(self.driver, timeout=20).until(
+                EC.element_to_be_clickable((By.XPATH, self.get_valid_code_xpath)))
+            self.get_valid_code_button.click()
             self.get_valid_code()
         print(self.valid_code_info)
         print(self.sign_in_info)
