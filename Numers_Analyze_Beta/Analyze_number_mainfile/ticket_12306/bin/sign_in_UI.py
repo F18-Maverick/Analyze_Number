@@ -1,7 +1,11 @@
 import os
 import tkinter
+from tkinter import messagebox
 class sign_in:
     def __init__(self, computer_info_width, computer_info_height, file_dir):
+        self.computer_info_width=computer_info_width
+        self.computer_info_height=computer_info_height
+        self.file_dir=file_dir
         self.file_dir_name = file_dir
         self.temp_dir = os.path.join(self.file_dir_name, 'temp')
         self.x_entry = 50
@@ -46,12 +50,20 @@ class sign_in:
         self.contact_info=self.contact_info_entry.get()
         self.password=self.password_entry.get()
         self.ID_card_value=self.ID_card_entry.get()
-        self.get_result=[self.contact_info, self.password, self.ID_card_value]
-        if not os.path.exists(self.temp_dir):
-            os.makedirs(self.temp_dir)
-        with open(os.path.join(self.temp_dir, "data_socket_user_sign_in_info.log"), "w", encoding="utf-8") as datalog_write:
-            datalog_write.write(str(self.get_result))
-        self.windows_sign_in.destroy()
+        self.info_is_valid_state=(self.contact_info==None or len(str(self.contact_info).lstrip())==0 or
+                                  self.password==None or len(str(self.password).lstrip())==0 or
+                                  self.ID_card_value==None or len(str(self.ID_card_value).lstrip())==0 or
+                                  len(self.password)<6 or len(self.ID_card_value)<4 or len(self.ID_card_value)>4)
+        if self.info_is_valid_state:
+            tkinter.messagebox.showerror(title="登录错误", message="请输入正确的登录信息")
+            sign_in(self.computer_info_width, self.computer_info_height, self.file_dir)
+        else:
+            self.get_result=[self.contact_info, self.password, self.ID_card_value]
+            if not os.path.exists(self.temp_dir):
+                os.makedirs(self.temp_dir)
+            with open(os.path.join(self.temp_dir, "data_socket_user_sign_in_info.log"), "w", encoding="utf-8") as datalog_write:
+                datalog_write.write(str(self.get_result))
+            self.windows_sign_in.destroy()
     def button_get_sign_in_info(self):
         self.button_sign_in_sure = tkinter.Button(
             self.windows_sign_in, text="确认", width=8, height=1, font=("Arial", 8, "underline"))
