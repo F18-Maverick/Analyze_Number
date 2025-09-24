@@ -329,10 +329,17 @@ class get_ticket:
             EC.element_to_be_clickable((By.XPATH, self.sure_valid_code_button_xpath)))
         self.sure_valid_code_button.click()
         while self.is_statement_exit!=True:
+            print(self.driver.find_element(By.XPATH, self.sign_in_statement_xpath).is_displayed())
             if self.driver.find_element(By.XPATH, self.sign_in_statement_xpath).is_displayed()==True:
                 self.is_statement_exit=True
+            if self.driver.find_element(By.XPATH, self.sure_valid_code_button_xpath).is_displayed() == False:
+                self.is_statement_exit = True
+                break
         self.is_statement_exit=False
-        self.valid_code_statement_text = self.driver.find_element(By.XPATH, self.sign_in_statement_xpath).text
+        if self.driver.find_element(By.XPATH, self.sign_in_statement_xpath).is_displayed()==True:
+            self.valid_code_statement_text = self.driver.find_element(By.XPATH, self.sign_in_statement_xpath).text
+        else:
+            pass
         if self.valid_code_statement_text=="用户名或密码错误。":
             tkinter.messagebox.showerror(title="登录错误", message="用户名或密码错误。")
             os.remove(self.sign_in_socket_file)
@@ -362,7 +369,6 @@ class get_ticket:
         print(self.valid_code_info)
         print(self.sign_in_info)
     def ensure_ticket_info(self):
-        print(1)
         buyer_selection(self.computer_width, self.computer_high, self.file_dir_name)
     def web_get_ticket(self):
         self.from_station_input = WebDriverWait(self.driver, timeout=20).until(
@@ -388,7 +394,6 @@ class get_ticket:
         self.button_get_left_ticket.click()
         self.get_train_ticket_button()
         self.sign_in()
-        print(2)
         self.ensure_ticket_info()
 
 
