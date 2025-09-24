@@ -7,6 +7,7 @@ import tkinter.messagebox
 from selenium import webdriver
 from .sign_in_UI import sign_in
 from . import browsers_searcher
+from . select_ticket_buyer_UI import buyer_selection
 from .get_valid_code_UI import get_valid_code
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -360,6 +361,9 @@ class get_ticket:
             self.get_valid_code()
         print(self.valid_code_info)
         print(self.sign_in_info)
+    def ensure_ticket_info(self):
+        print(1)
+        buyer_selection(self.computer_width, self.computer_high, self.file_dir_name)
     def web_get_ticket(self):
         self.from_station_input = WebDriverWait(self.driver, timeout=20).until(
             EC.element_to_be_clickable((By.ID, "fromStationText")))
@@ -384,6 +388,9 @@ class get_ticket:
         self.button_get_left_ticket.click()
         self.get_train_ticket_button()
         self.sign_in()
+        print(2)
+        self.ensure_ticket_info()
+
 
 
 
