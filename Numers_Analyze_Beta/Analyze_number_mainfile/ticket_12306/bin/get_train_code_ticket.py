@@ -17,6 +17,8 @@ class get_ticket:
     def __init__(self, train_code, choose_start_station, choose_end_station, period_start_station, period_end_station,
                  train_go_date, condition, choose_index_train, train_start_time, train_code_list, reflex_table, file_dir,
                  computer_screen_height, computer_screen_width):
+        self.is_valid_code_pass=None
+        self.passenger_name_input_xpath=None
         self.ID_code_entry_xpath=None
         self.reget_valid_code_xpath=None
         self.before_valid_code_xpath=None
@@ -253,6 +255,7 @@ class get_ticket:
         self.sign_in_statement_xpath=r"/html/body/div[2]/div[35]/div[2]/div[1]/div/div[3]/p"
         self.before_valid_code_xpath=r"/html/body/div[2]/div[35]/div[1]/a"
         self.reget_valid_code_xpath=r"/html/body/div[2]/div[35]/div[2]/ul/li[2]/a"
+        self.passenger_name_input_xpath=r"/html/body/div[1]/div[11]/div[3]/div[1]/div/input[1]"
         self.sign_in_socket_file=os.path.join(self.temp_dir, "data_socket_user_sign_in_info.log")
         self.valid_code_socket_file=os.path.join(self.temp_dir, "data_socket_user_valid_code_info.log")
         self.valid_code_resend_file=os.path.join(self.temp_dir, "data_socket_user_resend_valid_code_info.log")
@@ -305,8 +308,8 @@ class get_ticket:
                 EC.element_to_be_clickable((By.XPATH, self.before_valid_code_xpath)))
             self.before_valid_code_button.click()
             self.sign_in()
-        self.get_valid_code()
-    def get_valid_code(self):
+        self.get_sure_valid_code()
+    def get_sure_valid_code(self):
         self.get_valid_code_thread=threading.Thread(
             target=get_valid_code,
             args=(self.computer_width, self.computer_high, self.file_dir_name, self.sign_in_info[0]),
@@ -333,15 +336,16 @@ class get_ticket:
         self.sure_valid_code_button.click()
         while self.is_statement_exit!=True:
             print(self.driver.find_element(By.XPATH, self.sign_in_statement_xpath).is_displayed())
+            print(self.driver.find_element(By.XPATH, self.sure_valid_code_button_xpath).is_displayed())
             print(self.is_statement_exit, "2")
+            if self.driver.find_element(By.XPATH, self.passenger_name_input_xpath).is_displayed() == True:
+                print(7)
+                self.is_valid_code_pass=True
+                self.is_statement_exit = True
             if self.driver.find_element(By.XPATH, self.sign_in_statement_xpath).is_displayed()==True:
                 print(6)
                 self.is_statement_exit=True
-            if self.driver.find_element(By.XPATH, self.sure_valid_code_button_xpath).is_displayed() == False:
-                print(7)
-                self.is_statement_exit = True
             print(self.is_statement_exit, "1")
-                #break
         self.is_statement_exit=False
         print(5)
         if self.driver.find_element(By.XPATH, self.sign_in_statement_xpath).is_displayed()==True:
@@ -372,7 +376,7 @@ class get_ticket:
                 self.get_valid_code_button = WebDriverWait(self.driver, timeout=20).until(
                     EC.element_to_be_clickable((By.XPATH, self.get_valid_code_xpath)))
                 self.get_valid_code_button.click()
-                self.get_valid_code()
+                self.get_sure_valid_code()
         else:
             print(4)
             pass

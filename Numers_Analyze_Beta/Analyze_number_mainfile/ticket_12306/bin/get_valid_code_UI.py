@@ -37,25 +37,30 @@ class get_valid_code:
         self.loading_valid_code="已经验证码发送给:{}".format(phone_number)
         self.loading_valid_code_text=tkinter.Label(self.windows_get_valid_code, text=self.loading_valid_code)
         self.loading_valid_code_text.place(x=self.x_entry, y=self.y_entry+40)
-        self.time_count_bind()
+        try:
+            self.time_count_bind()
+        except:
+            pass
     def time_count_bind(self):
         self.count_total_run+=1
         def time_count_down():
             self.time_count_total=60
             # if self.is_window_destory == False:
             while self.time_count_total!=0 and self.is_window_destory==False:
-                if self.is_window_destory==True:
-                    break
-                self.time_count_total-=1
-                time.sleep(1)
                 self.time_text=tkinter.Label(self.windows_get_valid_code, text="重新发送({}秒)".format(self.time_count_total))
                 self.time_text.place(x=self.x_entry, y=self.y_entry+60)
-            self.button_resend_valid_code = tkinter.Button(
-                self.windows_get_valid_code, text="重新发送验证码", width=24, height=1,
-                font=("Arial", 8, "underline"))
-            self.button_resend_valid_code.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
-            self.bind_resend_code = self.button_resend_valid_code.bind(
-                "<Button-1>", lambda evnet: self.time_count_bind())
+                self.time_count_total-=1
+                time.sleep(1)
+                self.time_text.destroy()
+            try:
+                self.button_resend_valid_code = tkinter.Button(
+                    self.windows_get_valid_code, text="重新发送验证码", width=24, height=1,
+                    font=("Arial", 8, "underline"))
+                self.button_resend_valid_code.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
+                self.bind_resend_code = self.button_resend_valid_code.bind(
+                    "<Button-1>", lambda evnet: self.time_count_bind())
+            except:
+                pass
         def time_count_down_thread():
             self.time_countdown_thread=threading.Thread(target=time_count_down, daemon=True)
             self.time_countdown_thread.start()
