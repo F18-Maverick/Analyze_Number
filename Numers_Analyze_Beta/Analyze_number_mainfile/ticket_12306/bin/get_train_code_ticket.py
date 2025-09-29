@@ -17,6 +17,7 @@ class get_ticket:
     def __init__(self, train_code, choose_start_station, choose_end_station, period_start_station, period_end_station,
                  train_go_date, condition, choose_index_train, train_start_time, train_code_list, reflex_table, file_dir,
                  computer_screen_height, computer_screen_width):
+        self.is_over_time=False
         self.is_valid_code_pass=None
         self.passenger_name_input_xpath=None
         self.ID_code_entry_xpath=None
@@ -334,22 +335,14 @@ class get_ticket:
         self.sure_valid_code_button=WebDriverWait(self.driver, timeout=20).until(
             EC.element_to_be_clickable((By.XPATH, self.sure_valid_code_button_xpath)))
         self.sure_valid_code_button.click()
-        while self.is_statement_exit!=True:
-            print(self.driver.find_element(By.XPATH, self.sign_in_statement_xpath).is_displayed())
-            print(self.driver.find_element(By.XPATH, self.sure_valid_code_button_xpath).is_displayed())
-            print(self.is_statement_exit, "2")
-            if self.driver.find_element(By.XPATH, self.passenger_name_input_xpath).is_displayed() == True:
-                print(7)
-                self.is_valid_code_pass=True
-                self.is_statement_exit = True
+        thread_check_over_time=threading.Thread(target=self.time_out_check, daemon=True)
+        thread_check_over_time.start()
+        while self.is_statement_exit!=True and self.is_over_time==False:
+            print(self.is_statement_exit, self.is_over_time)
             if self.driver.find_element(By.XPATH, self.sign_in_statement_xpath).is_displayed()==True:
-                print(6)
                 self.is_statement_exit=True
-            print(self.is_statement_exit, "1")
         self.is_statement_exit=False
-        print(5)
         if self.driver.find_element(By.XPATH, self.sign_in_statement_xpath).is_displayed()==True:
-            print(3)
             self.valid_code_statement_text = self.driver.find_element(By.XPATH, self.sign_in_statement_xpath).text
             if self.valid_code_statement_text == "用户名或密码错误。":
                 tkinter.messagebox.showerror(title="登录错误", message="用户名或密码错误。")
@@ -378,10 +371,16 @@ class get_ticket:
                 self.get_valid_code_button.click()
                 self.get_sure_valid_code()
         else:
-            print(4)
             pass
         print(self.valid_code_info)
         print(self.sign_in_info)
+    def time_out_check(self):
+        self.time_count_total=2
+        while self.time_count_total!=0:
+            time.sleep(1)
+            self.time_count_total-=1
+        self.is_over_time=True
+        print(self.is_over_time)
     def ensure_ticket_info(self):
         buyer_selection(self.computer_width, self.computer_high, self.file_dir_name)
     def web_get_ticket(self):
