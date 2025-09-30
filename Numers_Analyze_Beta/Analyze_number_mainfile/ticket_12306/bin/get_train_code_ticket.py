@@ -17,6 +17,7 @@ class get_ticket:
     def __init__(self, train_code, choose_start_station, choose_end_station, period_start_station, period_end_station,
                  train_go_date, condition, choose_index_train, train_start_time, train_code_list, reflex_table, file_dir,
                  computer_screen_height, computer_screen_width):
+        self.is_exist=False
         self.is_over_time=False
         self.is_valid_code_pass=None
         self.passenger_name_input_xpath=None
@@ -339,8 +340,6 @@ class get_ticket:
         thread_check_over_time.start()
         while self.is_statement_exit!=True and self.is_over_time==False:
             print(self.is_statement_exit, self.is_over_time)
-            # if self.driver.find_element(By.XPATH, self.sign_in_statement_xpath).is_displayed()==True:
-            #     self.is_statement_exit=True
             try:
                 element = WebDriverWait(self.driver, timeout=1).until(
                     EC.presence_of_element_located((By.XPATH, self.sign_in_statement_xpath))
@@ -393,7 +392,16 @@ class get_ticket:
         self.is_over_time=True
         print(self.is_over_time)
     def ensure_ticket_info(self):
-        buyer_selection(self.computer_width, self.computer_high, self.file_dir_name)
+        self.passengers_name_file=os.path.join(self.temp_dir, "data_socket_buyer_name_info.log")
+        self.passenger_name_UI_thread=threading.Thread(
+            target=buyer_selection,
+            args=(self.computer_width, self.computer_high, self.file_dir_name),
+            daemon=True)
+        self.passenger_name_UI_thread.start()
+        while self.is_exist!=True:
+            if os.path.exists(self.passengers_name_file)==True:
+                self.is_exist=True
+        self.is_exist=False
     def web_get_ticket(self):
         self.from_station_input = WebDriverWait(self.driver, timeout=20).until(
             EC.element_to_be_clickable((By.ID, "fromStationText")))

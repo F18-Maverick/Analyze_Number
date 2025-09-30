@@ -6,8 +6,7 @@ class sign_in:
         self.computer_info_width=computer_info_width
         self.computer_info_height=computer_info_height
         self.file_dir=file_dir
-        self.file_dir_name = file_dir
-        self.temp_dir = os.path.join(self.file_dir_name, 'temp')
+        self.temp_dir = os.path.join(self.file_dir, 'temp')
         self.x_entry = 50
         self.y_entry = 80 / 3
         self.windows_sign_in = tkinter.Toplevel()

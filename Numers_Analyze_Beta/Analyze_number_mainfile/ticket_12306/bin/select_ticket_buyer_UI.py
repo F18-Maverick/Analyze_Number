@@ -7,8 +7,7 @@ class buyer_selection:
         self.computer_info_width=computer_info_width
         self.computer_info_height=computer_info_height
         self.file_dir=file_dir
-        self.file_dir_name = file_dir
-        self.temp_dir = os.path.join(self.file_dir_name, 'temp')
+        self.temp_dir = os.path.join(self.file_dir, 'temp')
         self.x_entry = 50
         self.y_entry = (80/3)-25
         self.windows_buyer = tkinter.Toplevel()
@@ -51,7 +50,12 @@ class buyer_selection:
     def get_data(self):
         self.buyers_list=[]
         for buyer_input in self.buyer_input_field_list:
-            self.buyers_list.append(buyer_input.get())
+            self.passenger_name=buyer_input.get()
+            self.buyers_list.append(self.passenger_name)
+            if self.passenger_name==None or len(str(self.passenger_name).lstrip())==0:
+                tkinter.messagebox.showerror(title="选择乘车人错误", message="乘车人选择错误")
+                buyer_selection(self.computer_info_width, self.computer_info_height, self.file_dir)
+                pass
         if not os.path.exists(self.temp_dir):
             os.makedirs(self.temp_dir)
         with open(os.path.join(self.temp_dir, "data_socket_buyer_name_info.log"), "w", encoding="utf-8") as datalog_write:
