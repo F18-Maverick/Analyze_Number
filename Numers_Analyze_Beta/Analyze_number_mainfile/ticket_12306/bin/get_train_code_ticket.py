@@ -393,6 +393,8 @@ class get_ticket:
         print(self.is_over_time)
     def ensure_ticket_info(self):
         self.passengers_name_file=os.path.join(self.temp_dir, "data_socket_buyer_name_info.log")
+        if os.path.exists(self.passengers_name_file):
+            os.remove(self.passengers_name_file)
         self.passenger_name_UI_thread=threading.Thread(
             target=buyer_selection,
             args=(self.computer_width, self.computer_high, self.file_dir_name),
@@ -402,6 +404,10 @@ class get_ticket:
             if os.path.exists(self.passengers_name_file)==True:
                 self.is_exist=True
         self.is_exist=False
+        with open(self.passengers_name_file, "r", encoding="utf-8") as passengers_name_file:
+            self.passengers_name_list=passengers_name_file.read()
+        for passenger_name in self.passengers_name_list:
+            print(passenger_name)
     def web_get_ticket(self):
         self.from_station_input = WebDriverWait(self.driver, timeout=20).until(
             EC.element_to_be_clickable((By.ID, "fromStationText")))

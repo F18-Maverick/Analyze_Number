@@ -3,6 +3,7 @@ import tkinter
 from tkinter import messagebox
 class buyer_selection:
     def __init__(self, computer_info_width, computer_info_height, file_dir):
+        self.is_info_invalid=False
         self.buyer_input_field_list=[]
         self.computer_info_width=computer_info_width
         self.computer_info_height=computer_info_height
@@ -47,6 +48,7 @@ class buyer_selection:
         else:
             tkinter.messagebox.showerror(title="选择乘车人错误", message="至少需要有一位乘车人")
             buyer_selection(self.computer_info_width, self.computer_info_height, self.file_dir)
+            self.is_info_invalid=True
     def get_data(self):
         self.buyers_list=[]
         for buyer_input in self.buyer_input_field_list:
@@ -55,11 +57,12 @@ class buyer_selection:
             if self.passenger_name==None or len(str(self.passenger_name).lstrip())==0:
                 tkinter.messagebox.showerror(title="选择乘车人错误", message="乘车人选择错误")
                 buyer_selection(self.computer_info_width, self.computer_info_height, self.file_dir)
-                pass
-        if not os.path.exists(self.temp_dir):
-            os.makedirs(self.temp_dir)
-        with open(os.path.join(self.temp_dir, "data_socket_buyer_name_info.log"), "w", encoding="utf-8") as datalog_write:
-            datalog_write.write(str(self.buyers_list))
+                self.is_info_invalid=True
+        if self.is_info_invalid==False:
+            if not os.path.exists(self.temp_dir):
+                os.makedirs(self.temp_dir)
+            with open(os.path.join(self.temp_dir, "data_socket_buyer_name_info.log"), "w", encoding="utf-8") as datalog_write:
+                datalog_write.write(str(self.buyers_list))
         self.windows_buyer.destroy()
     def button_get_buyer_name_info(self):
         self.button_buyer_sure = tkinter.Button(
