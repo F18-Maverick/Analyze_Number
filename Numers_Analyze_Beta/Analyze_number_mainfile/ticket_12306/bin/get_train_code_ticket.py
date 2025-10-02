@@ -342,8 +342,7 @@ class get_ticket:
             print(self.is_statement_exit, self.is_over_time)
             try:
                 element = WebDriverWait(self.driver, timeout=1).until(
-                    EC.presence_of_element_located((By.XPATH, self.sign_in_statement_xpath))
-                )
+                    EC.presence_of_element_located((By.XPATH, self.sign_in_statement_xpath)))
                 if element.is_displayed():
                     self.is_statement_exit = True
             except:
@@ -405,9 +404,28 @@ class get_ticket:
                 self.is_exist=True
         self.is_exist=False
         with open(self.passengers_name_file, "r", encoding="utf-8") as passengers_name_file:
-            self.passengers_name_list=passengers_name_file.read()
+            self.passengers_name_read=passengers_name_file.read()
+        self.passengers_name_list=ast.literal_eval(self.passengers_name_read)
         for passenger_name in self.passengers_name_list:
-            print(passenger_name)
+            self.label_index = 0
+            while self.label_index<=len(self.passengers_name_list)-1:
+                self.passenger_name_label_xpath = (
+                    r"/html/body/div[1]/div[11]/div[3]/div[2]/div[1]/div[2]/ul/li[{}]/label".format(
+                        self.label_index + 1))
+                self.passenger_choose_xpath = (
+                    r"/html/body/div[1]/div[11]/div[3]/div[2]/div[1]/div[2]/ul/li[{}]/input".format(
+                        self.label_index + 1))
+                self.name_label=self.driver.find_element(By.XPATH, self.passenger_name_label_xpath)
+                self.name_text=self.name_label.text
+                if self.name_text==passenger_name:
+                    self.passenger_name_input = WebDriverWait(self.driver, timeout=20).until(
+                        EC.element_to_be_clickable((By.XPATH, self.passenger_choose_xpath)))
+                    self.passenger_name_input.click()
+                self.label_index+=1
+                pass
+            if self.label_index==len(self.passengers_name_list)-1:
+                tkinter.messagebox.showerror(title="选择乘车人错误", message="没有对应的乘车人，请确保已经在12306官网添加乘车人")
+                self.ensure_ticket_info()
     def web_get_ticket(self):
         self.from_station_input = WebDriverWait(self.driver, timeout=20).until(
             EC.element_to_be_clickable((By.ID, "fromStationText")))
