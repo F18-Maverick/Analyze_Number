@@ -153,6 +153,7 @@ class get_ticket:
             try:
                 if (self.choosed_driver_type_list[index]=="firefox" or self.choosed_driver_type_list[index]=="waterfox" or
                     self.choosed_driver_type_list[index]=="firefox-developer" or self.choosed_driver_type_list[index]=="firefox-nightly"):
+                    self.count += 1
                     from selenium.webdriver.firefox.options import Options
                     from selenium.webdriver.firefox.service import Service
                     self.options = Options()
@@ -166,6 +167,7 @@ class get_ticket:
                     self.web_get_ticket()
                 elif (self.choosed_driver_type_list[index]=="msedge" or self.choosed_driver_type_list[index]=="msedge-dev"
                       or self.choosed_driver_type_list[index]=="msedge-beta" or self.choosed_driver_type_list[index]=="msedge-canary"):
+                    self.count += 1
                     from selenium.webdriver.edge.options import Options
                     from selenium.webdriver.edge.service import Service
                     self.options = Options()
@@ -181,6 +183,7 @@ class get_ticket:
                       or self.choosed_driver_type_list[index]=="chromium" or self.choosed_driver_type_list[index]=="chrome-canary"
                       or self.choosed_driver_type_list[index]=="ungoogled-chromium" or self.choosed_driver_type_list[index]=="chrome-beta"
                       or self.choosed_driver_type_list[index]=="chrome-test"):
+                    self.count += 1
                     from selenium.webdriver.chrome.options import Options
                     from selenium.webdriver.chrome.service import Service
                     self.options = Options()
@@ -194,9 +197,8 @@ class get_ticket:
                     self.web_get_ticket()
                 else:
                     tkinter.messagebox.showerror(title="Error", message="Error")
-                self.count += 1
             except:
-                pass
+                continue
             break
         if self.count==len(self.choosed_driver_name_list):
             tkinter.messagebox.showerror(title="Error", message="无法使用任何浏览器，请提交issues至该项目的GitHub仓库")
