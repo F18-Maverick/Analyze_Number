@@ -391,6 +391,10 @@ class get_ticket:
         self.is_over_time=True
         print(self.is_over_time)
     def ensure_ticket_info(self):
+        self.give_ticket_info_xpath=r"/html/body/div[1]/div[11]/div[5]/a[2]"
+        self.ticket_sure_xpath=r"/html/body/div[5]/div/div[5]/div[1]/div/div[2]/div[2]/div[8]/a[2]"
+        self.tip_sure_xpath=r"/html/body/div[4]/div[2]/div[2]/div[2]/a"
+        # /html/body/div[4]/div[2]/div[2]/div[2]/a
         self.passengers_name_file=os.path.join(self.temp_dir, "data_socket_buyer_name_info.log")
         if os.path.exists(self.passengers_name_file):
             os.remove(self.passengers_name_file)
@@ -426,6 +430,18 @@ class get_ticket:
             if self.label_index==len(self.passengers_name_list)-1:
                 tkinter.messagebox.showerror(title="选择乘车人错误", message="没有对应的乘车人，请确保已经在12306官网添加乘车人")
                 self.ensure_ticket_info()
+        self.give_ticket_info_button = WebDriverWait(self.driver, timeout=20).until(
+            EC.element_to_be_clickable((By.XPATH, self.give_ticket_info_xpath)))
+        self.give_ticket_info_button.click()
+        try:
+            self.tip_sure_button = WebDriverWait(self.driver, timeout=2).until(
+                EC.element_to_be_clickable((By.XPATH, self.tip_sure_xpath)))
+            self.tip_sure_button.click()
+        except:
+            pass
+        self.sure_ticket_button = WebDriverWait(self.driver, timeout=20).until(
+            EC.element_to_be_clickable((By.XPATH, self.ticket_sure_xpath)))
+        self.sure_ticket_button.click()
     def web_get_ticket(self):
         self.from_station_input = WebDriverWait(self.driver, timeout=20).until(
             EC.element_to_be_clickable((By.ID, "fromStationText")))
@@ -452,7 +468,10 @@ class get_ticket:
         self.sign_in()
         self.ensure_ticket_info()
 
-
+# /html/body/div[1]/div[2]/div[2]/div[2]/div[12]/p/span/a
+# /html/body/div[1]/div[2]/div[2]/div[2]/div[2]/div/div[3]/table/tbody/tr[3]/td[1]/label/input
+# /html/body/div[1]/div[2]/div[2]/div[2]/div[2]/div/div[4]/div[2]/div[2]/select
+# /html/body/div[1]/div[3]/div[2]/a[2]
 
 
 
