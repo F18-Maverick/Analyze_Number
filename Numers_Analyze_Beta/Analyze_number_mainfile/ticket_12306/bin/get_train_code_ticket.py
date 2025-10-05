@@ -396,7 +396,7 @@ class get_ticket:
         self.give_ticket_info_xpath=r"/html/body/div[1]/div[11]/div[5]/a[2]"
         self.ticket_sure_xpath=r"/html/body/div[5]/div/div[5]/div[1]/div/div[2]/div[2]/div[8]/a[2]"
         self.tip_sure_xpath=r"/html/body/div[4]/div[2]/div[2]/div[2]/a"
-        # /html/body/div[4]/div[2]/div[2]/div[2]/a
+        self.ticket_get_succeess_xpath=r"/html/body/div[1]/div[2]/div[1]/div/h3/span"
         self.passengers_name_file=os.path.join(self.temp_dir, "data_socket_buyer_name_info.log")
         if os.path.exists(self.passengers_name_file):
             os.remove(self.passengers_name_file)
@@ -444,6 +444,14 @@ class get_ticket:
         self.sure_ticket_button = WebDriverWait(self.driver, timeout=20).until(
             EC.element_to_be_clickable((By.XPATH, self.ticket_sure_xpath)))
         self.sure_ticket_button.click()
+        while self.is_statement_exit!=True:
+            try:
+                if self.driver.find_element(By.XPATH, self.ticket_get_succeess_xpath).is_displayed()==True:
+                    self.is_statement_exit=True
+            except:
+                pass
+        self.is_statement_exit=False
+        tkinter.messagebox.showinfo(title="抢票成功", message="成功抢票，请在浏览器中完成订单支付")
     def web_get_ticket(self):
         self.from_station_input = WebDriverWait(self.driver, timeout=20).until(
             EC.element_to_be_clickable((By.ID, "fromStationText")))
