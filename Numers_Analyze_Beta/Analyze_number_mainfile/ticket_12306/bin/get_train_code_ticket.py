@@ -20,6 +20,7 @@ class get_ticket:
         self.is_exist=False
         self.is_over_time=False
         self.is_valid_code_pass=None
+        self.sign_sure_button_xapth=None
         self.passenger_name_input_xpath=None
         self.ID_code_entry_xpath=None
         self.reget_valid_code_xpath=None
@@ -260,6 +261,7 @@ class get_ticket:
         self.before_valid_code_xpath=r"/html/body/div[2]/div[35]/div[1]/a"
         self.reget_valid_code_xpath=r"/html/body/div[2]/div[35]/div[2]/ul/li[2]/a"
         self.passenger_name_input_xpath=r"/html/body/div[1]/div[11]/div[3]/div[1]/div/input[1]"
+        self.sign_sure_button_xapth=r"/html/body/div[6]/div[2]/div[2]/div[2]/a"
         self.sign_in_socket_file=os.path.join(self.temp_dir, "data_socket_user_sign_in_info.log")
         self.valid_code_socket_file=os.path.join(self.temp_dir, "data_socket_user_valid_code_info.log")
         self.valid_code_resend_file=os.path.join(self.temp_dir, "data_socket_user_resend_valid_code_info.log")
@@ -338,6 +340,12 @@ class get_ticket:
         self.sure_valid_code_button=WebDriverWait(self.driver, timeout=20).until(
             EC.element_to_be_clickable((By.XPATH, self.sure_valid_code_button_xpath)))
         self.sure_valid_code_button.click()
+        try:
+            self.sure_tip_button = WebDriverWait(self.driver, timeout=2).until(
+                EC.element_to_be_clickable((By.XPATH, self.sign_sure_button_xapth)))
+            self.sure_tip_button.click()
+        except:
+            pass
         thread_check_over_time=threading.Thread(target=self.time_out_check, daemon=True)
         thread_check_over_time.start()
         while self.is_statement_exit!=True and self.is_over_time==False:
